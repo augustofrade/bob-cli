@@ -24,7 +24,7 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
     console.log(`Updating knowledge of the action "${args.action_name}"...\n`);
   }
 
-  const fsActionTypes: BobActionType[] = ["dir", "file", "script"];
+  const fsActionTypes: BobActionType[] = ["dir", "file", "script", "list-dir"];
   if (fsActionTypes.includes(args.type)) {
     args.content = getAbsolutePath(args.content);
   }

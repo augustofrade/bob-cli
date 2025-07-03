@@ -6,6 +6,7 @@ export default class ActionHandler {
     file: this.handleFileAction,
     text: this.handleTextualAction,
     dir: this.handleTextualAction,
+    "list-dir": this.handleListDirAction,
     script: this.handleTextualAction,
     qr: this.handleTextualAction,
   };
@@ -34,6 +35,19 @@ export default class ActionHandler {
           return reject(err);
         }
         console.log(data);
+        resolve(action.content);
+      });
+    });
+  }
+
+  private static handleListDirAction(action: BobActionData): Promise<string> {
+    return new Promise((resolve, reject) => {
+      fs.readdir(action.content, { withFileTypes: true }, (err, files) => {
+        if (err) {
+          console.error(`Something happened while reading the specified directory\n`);
+          return reject(err);
+        }
+        files.forEach((file) => console.log(file));
         resolve(action.content);
       });
     });

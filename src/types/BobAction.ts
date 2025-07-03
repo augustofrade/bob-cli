@@ -1,4 +1,4 @@
-export type BobActionType = "text" | "file" | "dir" | "script" | "qr";
+export type BobActionType = "text" | "file" | "dir" | "list-dir" | "script" | "qr";
 
 export interface BobActionData {
   actionName: string;

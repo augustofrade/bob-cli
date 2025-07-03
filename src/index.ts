@@ -1,8 +1,8 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import doCommand from "./commands/do.command";
-import learnCommand from "./commands/learn.command";
 import helloCommand from "./commands/hello.command";
+import learnCommand from "./commands/learn.command";
 
 yargs(hideBin(process.argv))
   .scriptName("bob")
@@ -24,7 +24,7 @@ yargs(hideBin(process.argv))
           describe: "Type of the content",
           type: "string",
           default: "text",
-          choices: ["text", "file", "dir", "script", "qr"],
+          choices: ["text", "file", "dir", "list-dir", "script", "qr"],
         })
         .option("force", {
           alias: "f",
@@ -64,11 +64,6 @@ yargs(hideBin(process.argv))
       console.log("default command");
     }
   )
-  .command(
-    "hello",
-    "BOB greets you",
-    () => {},
-    helloCommand
-  )
+  .command("hello", "BOB greets you", () => {}, helloCommand)
   .version(false)
   .help().argv;
