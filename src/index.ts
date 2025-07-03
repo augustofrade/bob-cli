@@ -1,15 +1,16 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import learnCommand from "./commands/learn.command";
 
 yargs(hideBin(process.argv))
   .scriptName("bob")
   .usage("Usage: $0 <command> [options]")
   .command(
-    "learn <name> <content>",
+    "learn <action_name> <content>",
     "Learns something new to do",
     (yargs) => {
       return yargs
-        .positional("name", {
+        .positional("action_name", {
           describe: "Name of the action",
           type: "string",
         })
@@ -32,9 +33,7 @@ yargs(hideBin(process.argv))
           "Learns a new action named 'teddies_folder' with the complete full path of './teddies' directory"
         );
     },
-    (args) => {
-      console.log(args);
-    }
+    learnCommand
   )
   .command(
     ["tellme", "list", "$0"],
