@@ -2,12 +2,25 @@ import { ArgumentsCamelCase } from "yargs";
 import ActionManager from "../core/ActionManager";
 import { BobActionType } from "../types/BobAction";
 
+interface LearnCommandArgs {
+  action_name: string;
+  content: string;
+  type: BobActionType;
+  description?: string;
+  force: boolean;
+}
+
 export default async function learnCommand(args: ArgumentsCamelCase<LearnCommandArgs>) {
   const actionManager = ActionManager.Instance;
   const learntActions = await actionManager.getlearntActions();
-  if (learntActions[args.action_name]) {
-    console.error(`I have already learnt the action "${args.action_name}"!\n`);
-    return;
+  const alreadyLearnt = learntActions[args.action_name] !== undefined;
+
+  if (alreadyLearnt) {
+    if (!args.force) {
+      console.error(`I have already learnt the action "${args.action_name}"!\n`);
+      return;
+    }
+    console.log(`Updating knowledge of the action "${args.action_name}"...\n`);
   }
 
   try {
@@ -17,7 +30,7 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
       type: args.type,
       description: args.description,
     });
-    console.log(`I've learnt the action "${args.action_name}" of the type ${args.type}!\n`);
+    console.log(getSuccessMessage(args.action_name, args.type, alreadyLearnt));
   } catch (error) {
     console.error(
       `Something happened while I tried learning the action "${args.action_name}".\n\n`
@@ -26,9 +39,11 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
   }
 }
 
-interface LearnCommandArgs {
-  action_name: string;
-  content: string;
-  type: BobActionType;
-  description?: string;
+function getSuccessMessage(
+  actionName: string,
+  type: BobActionType,
+  alreadyLearnt: boolean
+): string {
+  if (alreadyLearnt) return `I have updated my knowledge of the action "${actionName}"!\n`;
+  return `I have learnt the action "${actionName}" of the type ${type}!\n`;
 }

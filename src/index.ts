@@ -24,6 +24,12 @@ yargs(hideBin(process.argv))
           default: ["text"],
           choices: ["text", "file", "dir", "script", "qr"],
         })
+        .option("force", {
+          alias: "f",
+          describe: "Force learning the action even if BOB has already learnt it",
+          type: "boolean",
+          default: false,
+        })
         .example(
           "bob learn say_hello 'Hello, World!'",
           "Learns a new action named 'say_hello' with content 'Hello, World!'\n"
