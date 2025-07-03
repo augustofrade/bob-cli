@@ -1,7 +1,7 @@
 import { ArgumentsCamelCase } from "yargs";
+import ActionHandler from "../core/ActionHandler";
 import ActionManager from "../core/ActionManager";
 import listLearntActions from "../helpers/listLearntActions";
-import ActionHandler from "../core/ActionHandler";
 import { BobActionData } from "../types/BobAction";
 
 interface DoCommandArgs {
@@ -26,6 +26,6 @@ export default async function doCommand(args: ArgumentsCamelCase<DoCommandArgs>)
 
   ActionHandler.handle({
     actionName: args.action_name,
-    ...action
+    ...action,
   });
 }
