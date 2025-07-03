@@ -1,6 +1,6 @@
 import { ArgumentsCamelCase } from "yargs";
 import ActionManager from "../core/ActionManager";
-import { BobAction } from "../types/BobAction";
+import { BobActionType } from "../types/BobAction";
 
 export default async function learnCommand(args: ArgumentsCamelCase<LearnCommandArgs>) {
   const actionManager = ActionManager.Instance;
@@ -16,6 +16,6 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
 interface LearnCommandArgs {
   action_name: string;
   content: string;
-  type: BobAction;
+  type: BobActionType;
   description?: string;
 }

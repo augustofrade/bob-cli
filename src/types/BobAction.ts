@@ -1,15 +1,15 @@
-export type BobAction = "text" | "file" | "dir" | "script" | "qr";
+export type BobActionType = "text" | "file" | "dir" | "script" | "qr";
 
 export interface BobActionData {
   actionName: string;
   content: string;
-  type: BobAction;
+  type: BobActionType;
   description?: string;
   learntAt: Date;
 }
 
 export interface BobActionCollection {
-  [actionName: string]: Omit<BobActionData, "action_name">;
+  [actionName: string]: Omit<BobActionData, "actionName">;
 }
 
 export type CreateBobAction = Omit<BobActionData, "learntAt">;
