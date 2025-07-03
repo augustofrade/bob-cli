@@ -2,6 +2,7 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import doCommand from "./commands/do.command";
 import learnCommand from "./commands/learn.command";
+import helloCommand from "./commands/hello.command";
 
 yargs(hideBin(process.argv))
   .scriptName("bob")
@@ -62,6 +63,12 @@ yargs(hideBin(process.argv))
     (argv) => {
       console.log("default command");
     }
+  )
+  .command(
+    "hello",
+    "BOB greets you",
+    () => {},
+    helloCommand
   )
   .version(false)
   .help().argv;
