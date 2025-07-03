@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "chalk": "^5.4.1",
+    "qr": "^0.5.0",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
