@@ -6,7 +6,7 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
   const actionManager = ActionManager.Instance;
 
   actionManager.saveLearntAction({
-    action_name: args.action_name,
+    actionName: args.action_name,
     content: args.content,
     type: args.type,
     description: args.description,

@@ -1,22 +1,22 @@
-import { BobActionData, CreateBobAction } from "../../types/BobAction";
+import { BobActionCollection, BobActionData, CreateBobAction } from "../../types/BobAction";
 import JsonFS from "../JsonFS";
 
 export default class ActionManager {
   public static instance: ActionManager;
   private static readonly learntActionsFile = "learntActions.json";
-  private learntActions: Array<BobActionData> = [];
+  private learntActions: null | BobActionCollection = null;
 
   private constructor() {}
 
-  public getlearntActions(): Promise<Array<BobActionData>> {
+  public getlearntActions(): Promise<BobActionCollection> {
     return new Promise((resolve, reject) => {
-      if (this.learntActions.length > 0) {
+      if (this.learntActions) {
         return resolve(this.learntActions);
       }
 
-      JsonFS.read<BobActionData[]>(ActionManager.learntActionsFile)
+      JsonFS.read<BobActionCollection>(ActionManager.learntActionsFile)
         .then((data) => {
-          this.learntActions = data || [];
+          this.learntActions = data || {};
           resolve(this.learntActions);
         })
         .catch((error) => {
@@ -25,14 +25,15 @@ export default class ActionManager {
     });
   }
 
-  public saveLearntAction(action: CreateBobAction): Promise<void> {
+  public async saveLearntAction(action: CreateBobAction): Promise<void> {
     const data: BobActionData = {
       ...action,
       learntAt: new Date(),
     };
-    this.learntActions.push(data);
+    const learntActions = await this.getlearntActions();
+    learntActions[data.actionName] = data;
 
-    return JsonFS.write(ActionManager.learntActionsFile, data);
+    return JsonFS.write(ActionManager.learntActionsFile, learntActions);
   }
 
   /**
