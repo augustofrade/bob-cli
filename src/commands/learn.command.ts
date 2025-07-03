@@ -1,5 +1,6 @@
 import { ArgumentsCamelCase } from "yargs";
 import ActionManager from "../core/ActionManager";
+import getAbsolutePath from "../helpers/get-absolute-path";
 import { BobActionType } from "../types/BobAction";
 
 interface LearnCommandArgs {
@@ -21,6 +22,11 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
       return;
     }
     console.log(`Updating knowledge of the action "${args.action_name}"...\n`);
+  }
+
+  const fsActionTypes: BobActionType[] = ["dir", "file", "script"];
+  if (fsActionTypes.includes(args.type)) {
+    args.content = getAbsolutePath(args.content);
   }
 
   try {
