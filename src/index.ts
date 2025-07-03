@@ -21,7 +21,7 @@ yargs(hideBin(process.argv))
         .option("type", {
           describe: "Type of the content",
           type: "string",
-          default: ["text"],
+          default: "text",
           choices: ["text", "file", "dir", "script", "qr"],
         })
         .option("force", {
