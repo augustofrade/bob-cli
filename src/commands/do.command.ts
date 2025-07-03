@@ -1,6 +1,6 @@
 import { ArgumentsCamelCase } from "yargs";
 import ActionManager from "../core/ActionManager";
-import listLearntActions from "../helpers/listtLearntActions";
+import listLearntActions from "../helpers/listLearntActions";
 
 interface DoCommandArgs {
   action_name?: string;
