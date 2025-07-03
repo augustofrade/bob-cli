@@ -8,13 +8,5 @@
   "semi": true,
   "singleQuote": false,
   "quoteProps": "as-needed",
-  "printWidth": 90,
-  "overrides": [
-    {
-      "files": "*.html",
-      "options": {
-        "printWidth": 120
-      }
-    }
-  ]
+  "printWidth": 100
 }
