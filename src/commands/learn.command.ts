@@ -6,7 +6,7 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
   const actionManager = ActionManager.Instance;
   const learntActions = await actionManager.getlearntActions();
   if (learntActions[args.action_name]) {
-    console.error(`I've already learnt the action "${args.action_name}"!\n`);
+    console.error(`I have already learnt the action "${args.action_name}"!\n`);
     return;
   }
 
