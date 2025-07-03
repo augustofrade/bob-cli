@@ -1,4 +1,5 @@
 import fs from "fs";
+import encodeQR from "qr";
 import { BobActionData, BobActionType } from "../../types/BobAction";
 
 export default class ActionHandler {
@@ -8,7 +9,7 @@ export default class ActionHandler {
     dir: this.handleTextualAction,
     "list-dir": this.handleListDirAction,
     script: this.handleTextualAction,
-    qr: this.handleTextualAction,
+    qr: this.handleQrAtion,
   };
 
   public static handle(action: BobActionData): Promise<string> {
@@ -37,6 +38,14 @@ export default class ActionHandler {
         console.log(data);
         resolve(action.content);
       });
+    });
+  }
+
+  private static handleQrAtion(action: BobActionData): Promise<string> {
+    return new Promise((resolve) => {
+      const ascii = encodeQR(action.content, "ascii");
+      console.log(ascii);
+      resolve(ascii);
     });
   }
 
