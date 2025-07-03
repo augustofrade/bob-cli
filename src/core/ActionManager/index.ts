@@ -9,7 +9,7 @@ export default class ActionManager {
 
   private constructor() {}
 
-  public getlearntActions(): Promise<BobActionCollection> {
+  public getlLearntActions(): Promise<BobActionCollection> {
     return new Promise((resolve, reject) => {
       if (this.learntActions) {
         return resolve(this.learntActions);
@@ -27,7 +27,7 @@ export default class ActionManager {
   }
 
   public async saveLearntAction(action: CreateBobAction): Promise<void> {
-    const learntActions = await this.getlearntActions();
+    const learntActions = await this.getlLearntActions();
     learntActions[action.actionName] = {
       content: action.content,
       type: action.type,

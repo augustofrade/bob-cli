@@ -12,7 +12,7 @@ interface LearnCommandArgs {
 
 export default async function learnCommand(args: ArgumentsCamelCase<LearnCommandArgs>) {
   const actionManager = ActionManager.Instance;
-  const learntActions = await actionManager.getlearntActions();
+  const learntActions = await actionManager.getlLearntActions();
   const alreadyLearnt = learntActions[args.action_name] !== undefined;
 
   if (alreadyLearnt) {
