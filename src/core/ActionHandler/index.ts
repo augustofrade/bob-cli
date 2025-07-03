@@ -47,7 +47,9 @@ export default class ActionHandler {
           console.error(`Something happened while reading the specified directory\n`);
           return reject(err);
         }
-        files.forEach((file) => console.log(file));
+        files.forEach((file) => {
+          console.log(`${file.isDirectory() ? "DIR" : "   "}  ${file.name}`);
+        });
         resolve(action.content);
       });
     });
