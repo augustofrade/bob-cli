@@ -1,11 +1,11 @@
 import { ArgumentsCamelCase } from "yargs";
-import DataManager from "../core/DataManager";
+import ActionManager from "../core/ActionManager";
 import { BobAction } from "../types/BobAction";
 
 export default async function learnCommand(args: ArgumentsCamelCase<LearnCommandArgs>) {
-  const dataManager = DataManager.Instance;
+  const actionManager = ActionManager.Instance;
 
-  dataManager.saveLearntAction({
+  actionManager.saveLearntAction({
     action_name: args.action_name,
     content: args.content,
     type: args.type,

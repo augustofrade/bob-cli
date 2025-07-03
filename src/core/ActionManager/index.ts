@@ -1,8 +1,8 @@
 import { BobActionData, CreateBobAction } from "../../types/BobAction";
 import JsonFS from "../JsonFS";
 
-export default class DataManager {
-  public static instance: DataManager;
+export default class ActionManager {
+  public static instance: ActionManager;
   private static readonly learntActionsFile = "learntActions.json";
   private learntActions: Array<BobActionData> = [];
 
@@ -14,7 +14,7 @@ export default class DataManager {
         return resolve(this.learntActions);
       }
 
-      JsonFS.read<BobActionData[]>(DataManager.learntActionsFile)
+      JsonFS.read<BobActionData[]>(ActionManager.learntActionsFile)
         .then((data) => {
           this.learntActions = data || [];
           resolve(this.learntActions);
@@ -32,17 +32,17 @@ export default class DataManager {
     };
     this.learntActions.push(data);
 
-    return JsonFS.write(DataManager.learntActionsFile, data);
+    return JsonFS.write(ActionManager.learntActionsFile, data);
   }
 
   /**
-   * Singleton instance of DataManager
-   * @returns {DataManager} The singleton instance of DataManager
+   * Singleton instance of ActionManager
+   * @returns {ActionManager} The singleton instance of ActionManager
    */
-  public static get Instance(): DataManager {
-    if (!DataManager.instance) {
-      DataManager.instance = new DataManager();
+  public static get Instance(): ActionManager {
+    if (!ActionManager.instance) {
+      ActionManager.instance = new ActionManager();
     }
-    return DataManager.instance;
+    return ActionManager.instance;
   }
 }
