@@ -1,9 +1,10 @@
+import { join } from "path";
 import { BobActionCollection, CreateBobAction } from "../../types/BobAction";
 import JsonFS from "../JsonFS";
 
 export default class ActionManager {
   public static instance: ActionManager;
-  private static readonly learntActionsFile = "learntActions.json";
+  private static readonly learntActionsFile = join(__dirname, "../../../data/learntActions.json");
   private learntActions: null | BobActionCollection = null;
 
   private constructor() {}
