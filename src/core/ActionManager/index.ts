@@ -1,4 +1,4 @@
-import { BobActionCollection, BobActionData, CreateBobAction } from "../../types/BobAction";
+import { BobActionCollection, CreateBobAction } from "../../types/BobAction";
 import JsonFS from "../JsonFS";
 
 export default class ActionManager {
@@ -26,12 +26,13 @@ export default class ActionManager {
   }
 
   public async saveLearntAction(action: CreateBobAction): Promise<void> {
-    const data: BobActionData = {
-      ...action,
+    const learntActions = await this.getlearntActions();
+    learntActions[action.actionName] = {
+      content: action.content,
+      type: action.type,
+      description: action.description,
       learntAt: new Date(),
     };
-    const learntActions = await this.getlearntActions();
-    learntActions[data.actionName] = data;
 
     return JsonFS.write(ActionManager.learntActionsFile, learntActions);
   }
