@@ -1,5 +1,5 @@
 import { join } from "path";
-import { BobActionCollection, CreateBobAction } from "../../types/BobAction";
+import { BobActionCollection, BobActionData, CreateBobAction } from "../../types/BobAction";
 import JsonFS from "../JsonFS";
 
 export default class ActionManager {
@@ -23,6 +23,23 @@ export default class ActionManager {
         .catch((error) => {
           reject(error);
         });
+    });
+  }
+
+  public async getLearntActionsArray(): Promise<BobActionData[]> {
+    const learntActions = await this.getlLearntActions();
+    return Object.entries(learntActions).map(([actionName, action]) => ({
+      actionName,
+      content: action.content,
+      type: action.type,
+      description: action.description,
+      learntAt: action.learntAt,
+    }));
+  }
+
+  public hasLearntAction(actionName: string): Promise<boolean> {
+    return this.getlLearntActions().then((learntActions) => {
+      return learntActions[actionName] !== undefined;
     });
   }
 

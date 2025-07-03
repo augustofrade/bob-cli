@@ -1,5 +1,6 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import doCommand from "./commands/do.command";
 import learnCommand from "./commands/learn.command";
 
 yargs(hideBin(process.argv))
@@ -7,7 +8,7 @@ yargs(hideBin(process.argv))
   .usage("Usage: $0 <command> [options]")
   .command(
     "learn <action_name> <content>",
-    "Learns something new to do",
+    "BOB Learns something new to do",
     (yargs) => {
       return yargs
         .positional("action_name", {
@@ -40,6 +41,19 @@ yargs(hideBin(process.argv))
         );
     },
     learnCommand
+  )
+  .command(
+    "do [action_name]",
+    "BOB Executes a learnt action",
+    (yargs) => {
+      return yargs
+        .positional("action_name", {
+          describe: "Name of the action to execute",
+          type: "string",
+        })
+        .example("bob do say_hello", "Executes the 'say_hello' action");
+    },
+    doCommand
   )
   .command(
     ["tellme", "list", "$0"],
