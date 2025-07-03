@@ -1,6 +1,8 @@
 import { ArgumentsCamelCase } from "yargs";
 import ActionManager from "../core/ActionManager";
 import listLearntActions from "../helpers/listLearntActions";
+import ActionHandler from "../core/ActionHandler";
+import { BobActionData } from "../types/BobAction";
 
 interface DoCommandArgs {
   action_name?: string;
@@ -11,12 +13,19 @@ export default async function doCommand(args: ArgumentsCamelCase<DoCommandArgs>)
 
   if (!args.action_name) {
     console.log("You need to specify an action name for me to execute.");
-    return listLearntActions();
+    return await listLearntActions();
   }
 
-  if (learntActions[args.action_name]) {
+  const action: undefined | Omit<BobActionData, "actionName"> = learntActions[args.action_name];
+
+  if (!action) {
     console.log(`I don't know how to do ${args.action_name} yet.`);
     console.log("You can teach me how to do it with the 'learn' command.");
     return await listLearntActions();
   }
+
+  ActionHandler.handle({
+    actionName: args.action_name,
+    ...action
+  });
 }
