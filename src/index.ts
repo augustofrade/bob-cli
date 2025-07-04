@@ -6,6 +6,7 @@ import learnCommand from "./commands/learn.command";
 import qrCommand from "./commands/qr.command";
 import regexCommand from "./commands/regex.command";
 import ActionManager from "./core/ActionManager";
+import listLearntActions from "./helpers/listLearntActions";
 
 try {
   const knowledgeNotFound = ActionManager.Instance.init();
@@ -119,14 +120,7 @@ function main() {
       },
       regexCommand
     )
-    .command(
-      ["tellme", "list", "$0"],
-      "the default command",
-      () => {},
-      (argv) => {
-        console.log("default command");
-      }
-    )
+    .command(["tellme", "$0"], "the default command", () => {}, listLearntActions)
     .command("hello", "BOB greets you", () => {}, helloCommand)
     .version(false)
     .help().argv;
