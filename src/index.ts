@@ -4,6 +4,7 @@ import doCommand from "./commands/do.command";
 import helloCommand from "./commands/hello.command";
 import learnCommand from "./commands/learn.command";
 import qrCommand from "./commands/qr.command";
+import regexCommand from "./commands/regex.command";
 
 yargs(hideBin(process.argv))
   .scriptName("bob")
@@ -77,6 +78,28 @@ yargs(hideBin(process.argv))
         );
     },
     qrCommand
+  )
+  .command(
+    "regex <pattern> [content]",
+    "BOB tests a regex pattern against the provided content.",
+    (yargs) => {
+      return yargs
+        .positional("pattern", {
+          describe: "Regex pattern to test",
+          type: "string",
+        })
+        .positional("content", {
+          describe:
+            "Content that BOB will test against the regex pattern. If not provided, BOB will read from stdin.",
+          type: "string",
+        })
+        .option("flags", {
+          alias: "f",
+          describe: "Regex flags to be used (e.g., 'g' for global, 'i' for case-insensitive)",
+          type: "string",
+        });
+    },
+    regexCommand
   )
   .command(
     ["tellme", "list", "$0"],
