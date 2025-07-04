@@ -4,6 +4,7 @@ interface RegexCommandArgs {
   pattern: string;
   content?: string;
   flags?: string;
+  all: boolean;
 }
 
 export default function regexCommand(args: ArgumentsCamelCase<RegexCommandArgs>) {
@@ -16,7 +17,11 @@ export default function regexCommand(args: ArgumentsCamelCase<RegexCommandArgs>)
     console.log("No match found.");
     return;
   }
-  console.log("Match found:");
+  if (!args.all) {
+    result = result.slice(1) as RegExpExecArray;
+  }
+
+  console.log("Matches found:");
   console.log(result);
 }
 

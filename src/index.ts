@@ -97,6 +97,12 @@ yargs(hideBin(process.argv))
           alias: "f",
           describe: "Regex flags to be used (e.g., 'g' for global, 'i' for case-insensitive)",
           type: "string",
+        })
+        .option("all", {
+          alias: "a",
+          describe: "Returns the whole regex result instead of just the matches",
+          type: "boolean",
+          default: false,
         });
     },
     regexCommand
