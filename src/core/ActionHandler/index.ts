@@ -43,7 +43,7 @@ export default class ActionHandler {
 
   private static handleQrAtion(action: BobActionData): Promise<string> {
     return new Promise((resolve) => {
-      const ascii = encodeQR(action.content, "ascii");
+      const ascii = encodeQR(action.content, "term");
       console.log(ascii);
       resolve(ascii);
     });

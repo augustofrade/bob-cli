@@ -3,6 +3,7 @@ import { hideBin } from "yargs/helpers";
 import doCommand from "./commands/do.command";
 import helloCommand from "./commands/hello.command";
 import learnCommand from "./commands/learn.command";
+import qrCommand from "./commands/qr.command";
 
 yargs(hideBin(process.argv))
   .scriptName("bob")
@@ -55,6 +56,27 @@ yargs(hideBin(process.argv))
         .example("bob do say_hello", "Executes the 'say_hello' action");
     },
     doCommand
+  )
+  .command(
+    "qr <content>",
+    "BOB generates a QR code for the given content",
+    (yargs) => {
+      return yargs
+        .positional("content", {
+          describe: "Content to encode in the QR code",
+          type: "string",
+        })
+        .option("output", {
+          alias: "o",
+          describe: "Output file to save the QR code image",
+          type: "string",
+        })
+        .example(
+          "bob qr 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'",
+          "Generates a QR code for the provided content"
+        );
+    },
+    qrCommand
   )
   .command(
     ["tellme", "list", "$0"],
