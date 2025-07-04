@@ -1,7 +1,7 @@
 {
   "name": "bob-cli",
-  "version": "0.0.5",
-  "description": "Bob CLI",
+  "version": "1.0.0",
+  "description": "Bob - Your CLI Buddy",
   "keywords": [
     "bob",
     "cli",
@@ -22,7 +22,11 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "ts": "ts-node src/index.ts"
+    "ts": "ts-node src/index.ts",
+    "setup": "npm install && tsc && npm i -g"
+  },
+  "bin": {
+    "bob": "./build/index.js"
   },
   "dependencies": {
     "chalk": "^5.4.1",
