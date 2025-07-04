@@ -1,13 +1,29 @@
+import fs from "fs";
 import { join } from "path";
 import { BobActionCollection, BobActionData, CreateBobAction } from "../../types/BobAction";
 import JsonFS from "../JsonFS";
 
 export default class ActionManager {
-  public static instance: ActionManager;
-  private static readonly learntActionsFile = join(__dirname, "../../../data/learntActions.json");
+  private static instance: ActionManager;
+  private static readonly learntActionsDir: string = join(__dirname, "../../../data/");
+  private static readonly learntActionsFile = join(this.learntActionsDir, "learntActions.json");
   private learntActions: null | BobActionCollection = null;
 
   private constructor() {}
+
+  /**
+   * Verifies if the data file exists.
+   * If the file does not exist, it creates a new one with an empty JSON object.
+   * @return Whether a learnt actions file should be created or not.
+   */
+  public init(): boolean {
+    fs.mkdirSync(ActionManager.learntActionsDir, { recursive: true });
+
+    if (fs.existsSync(ActionManager.learntActionsFile)) return false;
+
+    fs.writeFileSync(ActionManager.learntActionsFile, "{}", "utf-8");
+    return true;
+  }
 
   public getlLearntActions(): Promise<BobActionCollection> {
     return new Promise((resolve, reject) => {
