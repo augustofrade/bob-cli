@@ -14,7 +14,7 @@ export default function regexCommand(args: ArgumentsCamelCase<RegexCommandArgs>)
   const regex = new RegExp(args.pattern, regexFlags);
   let result = regex.exec(content);
   if (!result) {
-    console.log("No match found.");
+    console.log("No matches found.");
     return;
   }
   if (!args.all) {
