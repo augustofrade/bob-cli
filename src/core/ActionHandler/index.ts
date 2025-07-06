@@ -1,6 +1,8 @@
+import { exec } from "child_process";
 import fs from "fs";
 import encodeQR from "qr";
 import { BobActionData, BobActionType } from "../../types/BobAction";
+import ScriptHandler from "../ScriptHandler";
 
 export default class ActionHandler {
   private static handlers: Record<BobActionType, (action: BobActionData) => Promise<string>> = {
@@ -8,7 +10,7 @@ export default class ActionHandler {
     text: this.handleTextualAction,
     dir: this.handleTextualAction,
     "list-dir": this.handleListDirAction,
-    script: this.handleTextualAction,
+    script: this.handleScriptAction,
     qr: this.handleQrAtion,
   };
 
@@ -25,6 +27,27 @@ export default class ActionHandler {
       console.log(action.content);
       console.log("\n");
       resolve(action.content);
+    });
+  }
+
+  private static handleScriptAction(action: BobActionData): Promise<string> {
+    const scriptHandler = new ScriptHandler(action.content);
+    if (!scriptHandler.handleFileExtension()) {
+      return Promise.reject(
+        `Couldn't find a command runner found for file of extension "${scriptHandler.fileExtension}"`
+      );
+    }
+
+    const command = scriptHandler.withArgv(process.argv.slice(4)).getCommand();
+
+    return new Promise((resolve, reject) => {
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          return reject(error);
+        }
+        console.log(stdout);
+        resolve(stdout);
+      });
     });
   }
 
