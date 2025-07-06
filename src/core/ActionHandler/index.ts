@@ -31,6 +31,8 @@ export default class ActionHandler {
   }
 
   private static handleScriptAction(action: BobActionData): Promise<string> {
+    if (!fs.existsSync(action.content)) throw new Error(`Script not found: ${action.content}`);
+
     const scriptHandler = new ScriptHandler(action.content);
     if (!scriptHandler.handleFileExtension()) {
       return Promise.reject(
