@@ -35,7 +35,8 @@ export default class ActionHandler {
       return Promise.reject(`Script not found: ${action.content}`);
 
     const scriptHandler = new ScriptHandler(action.content);
-    if (!scriptHandler.handleFileExtension()) {
+    const runnerFound = scriptHandler.withFileRunner();
+    if (!runnerFound) {
       return Promise.reject(
         `Couldn't find a command runner found for file of extension "${scriptHandler.fileExtension}"`
       );
