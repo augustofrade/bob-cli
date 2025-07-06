@@ -27,5 +27,5 @@ export default async function doCommand(args: ArgumentsCamelCase<DoCommandArgs>)
   ActionHandler.handle({
     actionName: args.action_name,
     ...action,
-  });
+  }).catch((e) => console.log(e));
 }
