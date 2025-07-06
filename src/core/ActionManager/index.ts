@@ -68,7 +68,15 @@ export default class ActionManager {
       learntAt: new Date(),
     };
 
-    return JsonFS.write(ActionManager.learntActionsFile, learntActions);
+    JsonFS.write(ActionManager.learntActionsFile, learntActions);
+  }
+
+  public async deleteLearntAction(actionName: string): Promise<boolean> {
+    const learntActions = await this.getlLearntActions();
+    const actionExists = (await learntActions[actionName]) !== undefined;
+    delete learntActions[actionName];
+    await JsonFS.write(ActionManager.learntActionsFile, learntActions);
+    return actionExists;
   }
 
   /**

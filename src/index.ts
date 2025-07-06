@@ -3,6 +3,7 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import doCommand from "./commands/do.command";
+import forgetCommand from "./commands/forget.command";
 import helloCommand from "./commands/hello.command";
 import learnCommand from "./commands/learn.command";
 import qrCommand from "./commands/qr.command";
@@ -72,6 +73,17 @@ function main() {
           .example("bob do say_hello", "Executes the 'say_hello' action");
       },
       doCommand
+    )
+    .command(
+      "forget <action_name>",
+      "BOB forgets a learnt action",
+      (yargs) => {
+        yargs.positional("action_name", {
+          describe: "Name of the action to forget",
+          type: "string",
+        });
+      },
+      forgetCommand
     )
     .command(
       "qr <content>",
