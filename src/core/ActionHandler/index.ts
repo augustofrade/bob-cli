@@ -17,7 +17,7 @@ export default class ActionHandler {
   public static handle(action: BobActionData): Promise<string> {
     const handler = this.handlers[action.type];
     if (!handler) {
-      throw new Error(`I don't know how to do actions of the type ${action.type}`);
+      return Promise.reject(`I don't know how to do actions of the type ${action.type}`);
     }
     return handler(action);
   }
@@ -31,7 +31,8 @@ export default class ActionHandler {
   }
 
   private static handleScriptAction(action: BobActionData): Promise<string> {
-    if (!fs.existsSync(action.content)) throw new Error(`Script not found: ${action.content}`);
+    if (!fs.existsSync(action.content))
+      return Promise.reject(`Script not found: ${action.content}`);
 
     const scriptHandler = new ScriptHandler(action.content);
     if (!scriptHandler.handleFileExtension()) {
