@@ -1,5 +1,6 @@
 import { exec } from "child_process";
 import fs from "fs";
+import { platform } from "os";
 import encodeQR from "qr";
 import { BobActionData, BobActionType } from "../../types/BobAction";
 import ScriptHandler from "../ScriptHandler";
@@ -12,6 +13,7 @@ export default class ActionHandler {
     "list-dir": this.handleListDirAction,
     script: this.handleScriptAction,
     qr: this.handleQrAtion,
+    open: this.handleOpenAction,
   };
 
   public static handle(action: BobActionData): Promise<string> {
@@ -46,8 +48,21 @@ export default class ActionHandler {
 
     return new Promise((resolve, reject) => {
       exec(command, (error, stdout, stderr) => {
-        if (error) {
-          return reject(error);
+        if (error || stderr) {
+          return reject(error || stderr);
+        }
+        console.log(stdout);
+        resolve(stdout);
+      });
+    });
+  }
+
+  private static handleOpenAction(action: BobActionData): Promise<string> {
+    const platformCommand = platform() === "win32" ? "start" : "open";
+    return new Promise((resolve, reject) => {
+      exec(`${platformCommand} ${action.content}`, (error, stdout, stderr) => {
+        if (error || stderr) {
+          return reject(error || stderr);
         }
         console.log(stdout);
         resolve(stdout);
