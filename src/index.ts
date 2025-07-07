@@ -39,6 +39,7 @@ function main() {
             type: "string",
           })
           .option("type", {
+            alias: "t",
             describe: "Type of the content",
             type: "string",
             default: "text",
