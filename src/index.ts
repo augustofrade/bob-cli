@@ -43,7 +43,7 @@ function main() {
             describe: "Type of the content",
             type: "string",
             default: "text",
-            choices: ["text", "file", "dir", "list-dir", "script", "qr", "open"],
+            choices: ["text", "file", "dir", "list-dir", "script", "qr", "open", "alias"],
           })
           .option("force", {
             alias: "f",

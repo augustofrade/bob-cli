@@ -1,4 +1,4 @@
-import { exec } from "child_process";
+import { exec, spawn } from "child_process";
 import fs from "fs";
 import { platform } from "os";
 import encodeQR from "qr";
@@ -14,6 +14,7 @@ export default class ActionHandler {
     script: this.handleScriptAction,
     qr: this.handleQrAtion,
     open: this.handleOpenAction,
+    alias: this.handleAliasAction,
   };
 
   public static handle(action: BobActionData): Promise<string> {
@@ -54,6 +55,16 @@ export default class ActionHandler {
         console.log(stdout);
         resolve(stdout);
       });
+    });
+  }
+
+  private static handleAliasAction(action: BobActionData): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+      const child = spawn(action.content, { shell: true });
+      for await (const data of child.stdout) {
+        console.log(data.toString());
+      }
+      resolve("");
     });
   }
 
