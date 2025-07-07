@@ -3,6 +3,8 @@ import ActionManager from "../core/ActionManager";
 import getAbsolutePath from "../helpers/get-absolute-path";
 import { BobActionType } from "../types/BobAction";
 
+import fs from "fs";
+
 interface LearnCommandArgs {
   action_name: string;
   content: string;
@@ -27,6 +29,8 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
   const fsActionTypes: BobActionType[] = ["dir", "file", "script", "list-dir"];
   if (fsActionTypes.includes(args.type)) {
     args.content = getAbsolutePath(args.content);
+  } else if (args.type === "open") {
+    args.content = handleOpenActionContent(args.content);
   }
 
   try {
@@ -52,4 +56,25 @@ function getSuccessMessage(
 ): string {
   if (alreadyLearnt) return `I have updated my knowledge of the action "${actionName}"!\n`;
   return `I have learnt the action "${actionName}" of the type ${type}!\n`;
+}
+
+/**
+ * Checks if the content of the action is a valid file or directory.
+ * If not, it will be treated as a URL.
+ * @param content content of the action
+ * @returns
+ * - absolute path of the file/directory if it exists in the filesystem OR
+ * - a URL with a HTTP protocol
+ */
+function handleOpenActionContent(content: string): string {
+  const path = getAbsolutePath(content);
+  if (fs.existsSync(path)) {
+    const pathStats = fs.statSync(content);
+    if (pathStats.isFile() || pathStats.isDirectory()) {
+      return path;
+    }
+  }
+  const hasProtocol = content.startsWith("http://") || content.startsWith("https://");
+  if (!hasProtocol) content = `http://${content}`;
+  return content.replace(/\s/gi, "%20");
 }
