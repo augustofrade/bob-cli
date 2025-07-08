@@ -28,7 +28,6 @@ export default class ActionHandler {
   private static handleTextualAction(action: BobActionData): Promise<string> {
     return new Promise((resolve) => {
       console.log(action.content);
-      console.log("\n");
       resolve(action.content);
     });
   }
