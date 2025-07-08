@@ -5,7 +5,7 @@ export default async function listLearntActions() {
   if (actions.length === 0) {
     console.log("I haven't learnt any actions yet. You can teach me something new with");
     console.log("bob learn <action_name> <content> --type <type>\n");
-    console.log("For more information, run 'bob help learn'.");
+    console.log("For more information, run 'bob learn --help'.");
     return;
   }
 
@@ -15,5 +15,5 @@ export default async function listLearntActions() {
       console.log(`- ${action.actionName}\n    Description:  ${action.description}`);
     else console.log(`- ${action.actionName}`);
   });
-  console.log("");
+  console.log("\nYou can ask me to do a learnt action by running 'bob do <action_name>'.");
 }
