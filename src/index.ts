@@ -8,13 +8,13 @@ import helloCommand from "./commands/hello.command";
 import learnCommand from "./commands/learn.command";
 import qrCommand from "./commands/qr.command";
 import regexCommand from "./commands/regex.command";
+import tellmeCommand from "./commands/tellme.command";
 import ActionManager from "./core/ActionManager";
-import listLearntActions from "./helpers/listLearntActions";
 
 try {
   const knowledgeNotFound = ActionManager.Instance.init();
   if (knowledgeNotFound) {
-    console.log("I didnt't find my knowledge base. Setting everything up...\n");
+    console.log("Couldn't find my knowledge base. Setting everything up...\n");
   }
   main();
 } catch {
@@ -135,7 +135,18 @@ function main() {
       },
       regexCommand
     )
-    .command(["tellme", "$0"], "the default command", () => {}, listLearntActions)
+    .command(
+      "tellme [action_name]",
+      "Asks BOB about a learnt action",
+      (yargs) => {
+        yargs.positional("action_name", {
+          describe:
+            "Name of the action to ask about. If not provided, BOB lists all learnt actions.",
+          type: "string",
+        });
+      },
+      tellmeCommand
+    )
     .command("hello", "BOB greets you", () => {}, helloCommand)
     .version(false)
     .help().argv;
