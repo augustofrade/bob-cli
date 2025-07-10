@@ -79,6 +79,17 @@ export default class ActionManager {
     return actionExists;
   }
 
+  public async deleteAllLearntActions(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      JsonFS.write(ActionManager.learntActionsFile, "{}")
+        .then((_) => resolve(true))
+        .catch((err) => {
+          console.log(err);
+          reject(false);
+        });
+    });
+  }
+
   /**
    * Singleton instance of ActionManager
    * @returns {ActionManager} The singleton instance of ActionManager

@@ -2,6 +2,7 @@
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import clearCommand from "./commands/clear.command";
 import doCommand from "./commands/do.command";
 import forgetCommand from "./commands/forget.command";
 import helloCommand from "./commands/hello.command";
@@ -86,6 +87,7 @@ function main() {
       },
       forgetCommand
     )
+    .command("clear", "CLears BOB's memory", () => {}, clearCommand)
     .command(
       "qr <content>",
       "BOB generates a QR code for the given content",
