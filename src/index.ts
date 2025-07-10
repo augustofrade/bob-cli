@@ -179,6 +179,13 @@ function main() {
             type: "boolean",
             default: true,
           })
+          .option("full-path", {
+            alias: "p",
+            describe:
+              "Show full path of the files and directories. Ignores the 'identation-char' option",
+            type: "boolean",
+            default: false,
+          })
           .example(
             "bob tree",
             "Displays a tree structure of the current directory with default options"

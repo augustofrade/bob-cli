@@ -10,6 +10,7 @@ interface TreeCommandArgs {
   identationChar: string;
   showHidden: boolean;
   showFiles: boolean;
+  fullPath: boolean;
 }
 
 export default function treeCommand(args: ArgumentsCamelCase<TreeCommandArgs>) {
@@ -21,6 +22,7 @@ export default function treeCommand(args: ArgumentsCamelCase<TreeCommandArgs>) {
     identationChar: args.identationChar,
     showHidden: args.showHidden,
     showFiles: args.showFiles,
+    fullPath: args.fullPath,
   });
 }
 
@@ -32,8 +34,14 @@ function readDir(directory: string, info: RecursiveDirInfo, level = 0) {
 
   const spaceBetween = level > 0 ? " " : "";
   content.forEach((element) => {
-    const displayName = `${identation}${spaceBetween}${element.name}`;
     if (!info.showHidden && element.name.startsWith(".")) return;
+
+    let displayName: string;
+    if (info.fullPath) {
+      displayName = `${path.join(directory, element.name)}`;
+    } else {
+      displayName = `${identation}${spaceBetween}${element.name}`;
+    }
 
     if (!element.isDirectory() && info.showFiles) {
       return console.log(displayName);
