@@ -10,6 +10,7 @@ import learnCommand from "./commands/learn.command";
 import qrCommand from "./commands/qr.command";
 import regexCommand from "./commands/regex.command";
 import tellmeCommand from "./commands/tellme.command";
+import treeCommand from "./commands/tree.command";
 import ActionManager from "./core/ActionManager";
 
 try {
@@ -18,7 +19,8 @@ try {
     console.log("Couldn't find my knowledge base. Setting everything up...\n");
   }
   main();
-} catch {
+} catch (error) {
+  console.log(error);
   console.log("Something happened while setting up my knowledge base. Please try again.");
 }
 
@@ -136,6 +138,57 @@ function main() {
           });
       },
       regexCommand
+    )
+    .command(
+      "tree [directory]",
+      "BOB displays a tree structure of the specified directory within the specified depth",
+      (yargs) => {
+        yargs
+          .positional("directory", {
+            describe:
+              "Directory to display the tree structure of. Defaults to the current directory.",
+            type: "string",
+          })
+          .option("depth", {
+            alias: "d",
+            describe: "Depth of the tree structure to display",
+            type: "number",
+            default: 3,
+          })
+          .option("identationSize", {
+            alias: "i",
+            describe: "Size of the displayed identation",
+            type: "number",
+            default: 2,
+          })
+          .option("identationChar", {
+            alias: "c",
+            describe: "Character used to display the identation",
+            type: "string",
+            default: "-",
+          })
+          .option("showHidden", {
+            alias: "h",
+            describe: "Show hidden files and directories",
+            type: "boolean",
+            default: false,
+          })
+          .option("showFiles", {
+            alias: "f",
+            describe: "Show files in the tree structure",
+            type: "boolean",
+            default: true,
+          })
+          .example(
+            "bob tree",
+            "Displays a tree structure of the current directory with default options"
+          )
+          .example(
+            "bob tree ~/Documents -d 2 -i 4 -c '-' -h",
+            "Displays a tree structure of the Documents directory with depth of 2, identation size of 4, identation character '-', displaying hidden files"
+          );
+      },
+      treeCommand
     )
     .command(
       "tellme [action_name]",
