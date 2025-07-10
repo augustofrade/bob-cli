@@ -155,25 +155,25 @@ function main() {
             type: "number",
             default: 3,
           })
-          .option("identationSize", {
+          .option("identation-size", {
             alias: "i",
             describe: "Size of the displayed identation",
             type: "number",
             default: 2,
           })
-          .option("identationChar", {
+          .option("identation-char", {
             alias: "c",
             describe: "Character used to display the identation",
             type: "string",
             default: "-",
           })
-          .option("showHidden", {
+          .option("show-hidden", {
             alias: "h",
             describe: "Show hidden files and directories",
             type: "boolean",
             default: false,
           })
-          .option("showFiles", {
+          .option("show-files", {
             alias: "f",
             describe: "Show files in the tree structure",
             type: "boolean",
