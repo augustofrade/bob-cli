@@ -81,12 +81,10 @@ export default class ActionManager {
 
   public async deleteAllLearntActions(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      JsonFS.write(ActionManager.learntActionsFile, "{}")
-        .then((_) => resolve(true))
-        .catch((err) => {
-          console.log(err);
-          reject(false);
-        });
+      fs.writeFile(ActionManager.learntActionsFile, "{}", (err) => {
+        if (err) return reject(err);
+        resolve(true);
+      });
     });
   }
 
