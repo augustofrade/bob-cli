@@ -25,7 +25,7 @@ export default class ActionManager {
     return true;
   }
 
-  public getlLearntActions(): Promise<BobActionCollection> {
+  public getLearntActions(): Promise<BobActionCollection> {
     return new Promise((resolve, reject) => {
       if (this.learntActions) {
         return resolve(this.learntActions);
@@ -43,7 +43,7 @@ export default class ActionManager {
   }
 
   public async getLearntActionsArray(): Promise<BobActionData[]> {
-    const learntActions = await this.getlLearntActions();
+    const learntActions = await this.getLearntActions();
     return Object.entries(learntActions).map(([actionName, action]) => ({
       actionName,
       content: action.content,
@@ -54,13 +54,13 @@ export default class ActionManager {
   }
 
   public hasLearntAction(actionName: string): Promise<boolean> {
-    return this.getlLearntActions().then((learntActions) => {
+    return this.getLearntActions().then((learntActions) => {
       return learntActions[actionName] !== undefined;
     });
   }
 
   public async saveLearntAction(action: CreateBobAction): Promise<void> {
-    const learntActions = await this.getlLearntActions();
+    const learntActions = await this.getLearntActions();
     learntActions[action.actionName] = {
       content: action.content,
       type: action.type,
@@ -72,7 +72,7 @@ export default class ActionManager {
   }
 
   public async deleteLearntAction(actionName: string): Promise<boolean> {
-    const learntActions = await this.getlLearntActions();
+    const learntActions = await this.getLearntActions();
     const actionExists = (await learntActions[actionName]) !== undefined;
     delete learntActions[actionName];
     await JsonFS.write(ActionManager.learntActionsFile, learntActions);

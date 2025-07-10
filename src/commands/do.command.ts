@@ -9,7 +9,7 @@ interface DoCommandArgs {
 }
 
 export default async function doCommand(args: ArgumentsCamelCase<DoCommandArgs>) {
-  const learntActions = await ActionManager.Instance.getlLearntActions();
+  const learntActions = await ActionManager.Instance.getLearntActions();
 
   if (!args.action_name) {
     console.log("You need to specify an action name for me to execute.");

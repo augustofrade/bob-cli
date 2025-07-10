@@ -12,7 +12,7 @@ export default async function tellmeCommand(args: ArgumentsCamelCase<TellmeComma
     return console.log("To know more about a specific action, run 'bob tellme <action_name>'.");
   }
 
-  const learntActions = await ActionManager.Instance.getlLearntActions();
+  const learntActions = await ActionManager.Instance.getLearntActions();
   const action = learntActions[args.action_name];
   if (action === undefined) {
     console.log(`I don't know how to do '${args.action_name}'.`);
