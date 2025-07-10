@@ -14,6 +14,7 @@ interface LearnCommandArgs {
 }
 
 export default async function learnCommand(args: ArgumentsCamelCase<LearnCommandArgs>) {
+  args.action_name = args.action_name.trim().replace(/\s+/g, "-");
   const actionManager = ActionManager.Instance;
   const learntActions = await actionManager.getLearntActions();
   const alreadyLearnt = learntActions[args.action_name] !== undefined;
@@ -34,8 +35,6 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
   }
 
   try {
-    args.action_name = args.action_name.trim().replace(/\s+/g, "-");
-
     await actionManager.saveLearntAction({
       actionName: args.action_name,
       content: args.content,
