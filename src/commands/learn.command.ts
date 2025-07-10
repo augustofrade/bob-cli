@@ -34,6 +34,8 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
   }
 
   try {
+    args.action_name = args.action_name.trim().replace(/\s+/g, "-");
+
     await actionManager.saveLearntAction({
       actionName: args.action_name,
       content: args.content,
