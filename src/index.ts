@@ -9,6 +9,7 @@ import helloCommand from "./commands/hello.command";
 import learnCommand from "./commands/learn.command";
 import qrCommand from "./commands/qr.command";
 import regexCommand from "./commands/regex.command";
+import serveCommand from "./commands/serve.command";
 import tellmeCommand from "./commands/tellme.command";
 import treeCommand from "./commands/tree.command";
 import ActionManager from "./core/ActionManager";
@@ -196,6 +197,29 @@ function main() {
           );
       },
       treeCommand
+    )
+    .command(
+      "serve [directory]",
+      "BOB starts a local server and serves the contents of the specified directory",
+      (yargs) => {
+        yargs
+          .option("directory", {
+            alias: "d",
+            describe: "Directory to serve the content from. Defaults to the current directory.",
+            type: "string",
+          })
+          .option("port", {
+            alias: "p",
+            describe: "Port to run the server on",
+            type: "number",
+            default: 3000,
+          })
+          .example(
+            "bob serve ~/Documents/website -p 8080",
+            "Starts a server serving the ~/Documents/website directory on port 8080"
+          );
+      },
+      serveCommand
     )
     .command(
       "tellme [action_name]",
