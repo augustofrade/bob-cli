@@ -4,11 +4,18 @@ import path from "path";
 import BobLogger from "../BobLogger";
 import mimeTypes from "./mime-types";
 
+/**
+ * Singleton class that serves static files from a specified directory.
+ */
 export default class BobServer {
   private logger: BobLogger = BobLogger.Instance;
 
   constructor(private directory: string) {}
 
+  /**
+   * Starts the server and listens on the specified port.
+   * @param port The port number to listen on.
+   */
   public listen(port: number) {
     console.log(`Serving directory ${this.directory}`);
 
@@ -38,12 +45,20 @@ export default class BobServer {
     });
   }
 
+  /**
+   * Handles redirection to a specified location.
+   */
   private handleRedirect(res: ServerResponse, location: string) {
     this.logger.logDebug(`Redirecting to ${location}`);
     res.writeHead(302, { Location: location });
     res.end();
   }
 
+  /**
+   * Handles the file request by reading the file and sending it in the response.
+   *
+   * Should only be called if the filePath is valid.
+   */
   private handleFileRequest(res: ServerResponse, filePath: string) {
     fs.stat(filePath, (err, stats) => {
       if (err || !stats.isFile()) {
@@ -67,10 +82,19 @@ export default class BobServer {
     });
   }
 
-  private getMimeType(ext: keyof typeof mimeTypes): string {
-    return mimeTypes[ext] || "text/html";
+  /**
+   * Gets the MIME type for a given file extension.
+   * @returns The MIME type as a string.
+   */
+  private getMimeType(fileExtension: keyof typeof mimeTypes): string {
+    return mimeTypes[fileExtension] || "text/html";
   }
 
+  /**
+   * Resolves the file path from the request URL.
+   * @param requestUrl - The URL from the request.
+   * @returns The file path or undefined if invalid. Defaults folder directories to "\<directory\>/index.html".
+   */
   private resolveFilePath(requestUrl?: string): string | undefined {
     if (!requestUrl || requestUrl === "/") {
       return "index.html";
