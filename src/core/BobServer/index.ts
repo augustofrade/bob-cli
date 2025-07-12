@@ -1,5 +1,7 @@
+import { exec } from "child_process";
 import fs from "fs";
 import http, { ServerResponse } from "http";
+import { platform } from "os";
 import path from "path";
 import BobLogger from "../BobLogger";
 import mimeTypes from "./mime-types";
@@ -16,7 +18,7 @@ export default class BobServer {
    * Starts the server and listens on the specified port.
    * @param port The port number to listen on.
    */
-  public listen(port: number) {
+  public listen(port: number, openInBrowser: boolean) {
     console.log(`Serving directory ${this.directory}`);
 
     const server = http.createServer((req, res) => {
@@ -40,8 +42,14 @@ export default class BobServer {
       }
     });
 
+    const address = `http://localhost:${port}`;
+
     server.listen(port, () => {
-      console.log(`Server is running at http://localhost:${port}`);
+      console.log(`Server is running at ${address}`);
+      if (openInBrowser) {
+        const platformCommand = platform() === "win32" ? "start" : "open";
+        exec(`${platformCommand} ${address}`);
+      }
     });
   }
 

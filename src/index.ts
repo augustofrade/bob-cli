@@ -214,6 +214,12 @@ function main() {
             type: "number",
             default: 3000,
           })
+          .option("open", {
+            alias: "o",
+            describe: "Opens the served directory in the default web browser",
+            type: "boolean",
+            default: true,
+          })
           .example(
             "bob serve ~/Documents/website -p 8080",
             "Starts a server serving the ~/Documents/website directory on port 8080"
