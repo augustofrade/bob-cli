@@ -13,10 +13,17 @@ export default class BobServer {
     console.log(`Serving directory ${this.directory}`);
 
     const server = http.createServer((req, res) => {
-      const filePath = path.join(this.directory, this.getDirectoryIndex(req.url));
+      const relativePath = this.resolveFilePath(req.url);
+      const filePath = relativePath ? path.join(this.directory, relativePath) : undefined;
 
       this.logger.logInfo(`Incoming request URL: ${req.url}`);
       this.logger.logDebug(`Resolved file path: ${filePath}\n`);
+
+      if (filePath === undefined) {
+        res.writeHead(302, { Location: "/" });
+        res.end();
+        return;
+      }
 
       fs.stat(filePath, (err, stats) => {
         if (err || !stats.isFile()) {
@@ -49,10 +56,21 @@ export default class BobServer {
     return mimeTypes[ext] || "text/html";
   }
 
-  private getDirectoryIndex(requestUrl?: string): string {
-    if (requestUrl === undefined || requestUrl === "/") {
+  private resolveFilePath(requestUrl?: string): string | undefined {
+    if (!requestUrl || requestUrl === "/") {
       return "index.html";
     }
+
+    requestUrl = decodeURIComponent(requestUrl);
+
+    if (requestUrl.includes("..") || requestUrl.includes("~")) {
+      return undefined;
+    }
+
+    if (requestUrl.endsWith("/") || path.extname(requestUrl) === "") {
+      return path.join(requestUrl, "index.html");
+    }
+
     return requestUrl;
   }
 }
