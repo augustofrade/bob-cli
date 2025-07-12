@@ -1,9 +1,12 @@
 import fs from "fs";
 import http from "http";
 import path from "path";
+import BobLogger from "../BobLogger";
 import mimeTypes from "./mime-types";
 
 export default class BobServer {
+  private logger: BobLogger = BobLogger.Instance;
+
   constructor(private directory: string) {}
 
   public listen(port: number) {
@@ -11,7 +14,10 @@ export default class BobServer {
 
     const server = http.createServer((req, res) => {
       const filePath = path.join(this.directory, this.getDirectoryIndex(req.url));
-      console.log("url: ", req.url);
+
+      this.logger.logInfo(`Incoming request URL: ${req.url}`);
+      this.logger.logDebug(`Resolved file path: ${filePath}\n`);
+
       fs.stat(filePath, (err, stats) => {
         if (err || !stats.isFile()) {
           res.writeHead(404, { "Content-Type": "text/plain" });
@@ -35,7 +41,7 @@ export default class BobServer {
     });
 
     server.listen(port, () => {
-      console.log(`Server is running at http://localhost:${port}`);
+      console.log(`Server is running at http://localhost:${port}\n`);
     });
   }
 
@@ -44,8 +50,6 @@ export default class BobServer {
   }
 
   private getDirectoryIndex(requestUrl?: string): string {
-    console.log("Incoming request URL: ", requestUrl);
-
     if (requestUrl === undefined || requestUrl === "/") {
       return "index.html";
     }
