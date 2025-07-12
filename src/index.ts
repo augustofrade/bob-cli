@@ -220,6 +220,13 @@ function main() {
             type: "boolean",
             default: true,
           })
+          .option("log-level", {
+            alias: "l",
+            describe: "Sets the log level for the server output",
+            type: "string",
+            choices: ["info", "debug", "verbose"],
+            default: "info",
+          })
           .example(
             "bob serve ~/Documents/website -p 8080",
             "Starts a server serving the ~/Documents/website directory on port 8080"
