@@ -4,11 +4,20 @@ import path from "path";
 import BobLogger from "../BobLogger";
 import mimeTypes from "./mime-types";
 
+/**
+ * Handles HTTP requests for BobServer.
+ */
 export default class BobServerRequestHandler {
   private logger: BobLogger = BobLogger.Instance;
 
   public constructor(private directory: string) {}
 
+  /**
+   * Handles incoming HTTP requests from BobServer.
+   *
+   * It resolves the requested file path based on the request URL, checks if the file exists,
+   *   and serves the file with the appropriate MIME type.
+   */
   public handleRequest(req: IncomingMessage, res: ServerResponse) {
     try {
       const relativePath = this.resolveFilePath(req.url);
