@@ -17,8 +17,9 @@ export default class BobServer {
         const relativePath = this.resolveFilePath(req.url);
         const filePath = relativePath ? path.join(this.directory, relativePath) : undefined;
 
+        console.log("");
         this.logger.logInfo(`Incoming request URL: ${req.url}`);
-        this.logger.logDebug(`Resolved file path: ${filePath ?? "Invalid path"}\n`);
+        this.logger.logDebug(`Resolved file path: ${filePath ?? "Invalid path"}`);
 
         if (filePath === undefined) {
           return this.handleRedirect(res, "/");
@@ -33,12 +34,12 @@ export default class BobServer {
     });
 
     server.listen(port, () => {
-      console.log(`Server is running at http://localhost:${port}\n`);
+      console.log(`Server is running at http://localhost:${port}`);
     });
   }
 
   private handleRedirect(res: ServerResponse, location: string) {
-    this.logger.logDebug(`Redirecting to ${location}\n`);
+    this.logger.logDebug(`Redirecting to ${location}`);
     res.writeHead(302, { Location: location });
     res.end();
   }
