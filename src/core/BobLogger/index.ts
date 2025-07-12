@@ -37,6 +37,13 @@ export default class BobLogger {
     }
   }
 
+  /**
+   * Logs independent of the log level.
+   */
+  public logError(message: string): void {
+    console.error(chalk.red(`[ERROR]    ${message}`));
+  }
+
   public setLogLevel(level: BobLogLevel): this {
     this.logLevel = level;
     return this;
