@@ -1,5 +1,5 @@
 export enum BobLogLevel {
-  "info",
-  "debug",
-  "verbose",
+  INFO,
+  DEBUG,
+  VERBOSE,
 }

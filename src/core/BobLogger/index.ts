@@ -1,24 +1,38 @@
 import chalk from "chalk";
 import { BobLogLevel } from "./BobLogLevel";
 
+/**
+ * Provides logging functionality.
+ *
+ * Being a singleton class, the log level can be set anywhere to control the verbosity of the logs.
+ */
 export default class BobLogger {
   private static instance: BobLogger;
-  private logLevel: BobLogLevel = BobLogLevel.info;
+  private logLevel: BobLogLevel = BobLogLevel.INFO;
 
   private constructor() {}
 
+  /**
+   * Logs independent of the log level.
+   */
   public logInfo(message: string): void {
     console.log(chalk.gray(`[INFO]     ${message}`));
   }
 
+  /**
+   * Logs if log level >= BobLogLevel.DEBUG
+   */
   public logDebug(message: string): void {
-    if (this.logLevel >= BobLogLevel.debug) {
+    if (this.logLevel >= BobLogLevel.DEBUG) {
       console.log(`[DEBUG]    ${message}`);
     }
   }
 
+  /**
+   * Logs if log level is set to the maximum allowed level, BobLogLevel.VERBOSE
+   */
   public logVerbose(message: string): void {
-    if (this.logLevel == BobLogLevel.verbose) {
+    if (this.logLevel == BobLogLevel.VERBOSE) {
       console.log(`[VERBOSE]  ${message}`);
     }
   }
