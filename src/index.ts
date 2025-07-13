@@ -203,11 +203,6 @@ function main() {
       "BOB starts a local server and serves the contents of the specified directory",
       (yargs) => {
         yargs
-          .option("directory", {
-            alias: "d",
-            describe: "Directory to serve the content from. Defaults to the current directory.",
-            type: "string",
-          })
           .option("port", {
             alias: "p",
             describe: "Port to run the server on",
