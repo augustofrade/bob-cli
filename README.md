@@ -111,6 +111,109 @@ bob do say_hello
 bob do
 ```
 
+### 🗑️ Forget Command
+
+Remove a previously learnt action from Bob's memory.
+
+```bash
+bob forget <action_name>
+```
+
+**Examples:**
+
+```bash
+# Forget the "say_hello" action
+bob forget say_hello
+```
+
+### 🧹 Clear Command
+
+Clear Bob's entire memory, removing all learnt actions.
+
+```bash
+bob clear
+```
+
+### 🌐 Serve Command
+
+Start a local HTTP server and serve the contents of the specified directory.
+
+When the server starts, it automatically opens a browser tab with the server URL.
+
+```bash
+bob serve [directory] [options]
+```
+
+**Options:**
+
+- `--port, -p <number>`: Port to run the server on (default: 3000)
+- `--open, -o`: Opens the served directory in the default web browser (default: true)
+- `--log-level, -l <level>`: Sets the log level for server output (choices: "info", "debug", "verbose", default: "info")
+
+**Examples:**
+
+```bash
+# Serve the current directory on default port (3000)
+bob serve
+
+# Serve a specific directory on custom port
+bob serve ~/Documents/portfolio -p 8080
+```
+
+**Logging Output Example:**
+
+```bash
+$ bob serve --log-level "debug"
+
+Serving directory /home/user/Documents/portfolio/
+Server is running at http://localhost:3000
+
+[INFO]     Incoming request URL: /
+[DEBUG]    Resolved file path: /home/user/Documents/portfolio/index.html
+
+[INFO]     Incoming request URL: /styles.css
+[DEBUG]    Resolved file path: /home/user/Documents/portfolio/styles.css
+
+[INFO]     Incoming request URL: /assets/dog.jpg
+[DEBUG]    Resolved file path: /home/user/Documents/portfolio/assets/dog.jpg
+```
+
+### 🌳 Tree Command
+
+Display a tree structure of the specified directory with customizable depth and formatting.
+
+```bash
+bob tree [directory] [options]
+```
+
+**Options:**
+
+- `--depth, -d <number>`: Depth of the tree structure to display (default: 3)
+- `--identation-size, -i <number>`: Size in spaces of the displayed indentation (default: 2)
+- `--identation-char, -c <char>`: Character used to display the indentation (default: "-")
+- `--show-hidden, -h`: Show hidden files and directories
+- `--show-files, -f`: Show files in the tree structure (default: true)
+- `--full-path, -p`: Show full path of files and directories. With this flag, Bob ignore the indentation size and character options.
+
+**Examples:**
+
+```bash
+# Display tree of current directory with default options
+bob tree
+
+# Display directory tree structure
+# - without an indentation character,
+# - indentation of 4 spaces
+# - showing hidden files
+bob tree ./project -h -i 4 -c " "
+
+# Show only directories without displaying the files
+bob tree ./src --show-files false
+
+# Display full paths
+bob tree ./project -p
+```
+
 ### 📱 QR Code Command
 
 Encode the provided text content.
@@ -223,6 +326,26 @@ bob learn docker_clean "docker system prune -a" --type script
 # Execute when needed
 bob do deploy
 bob do docker_clean
+```
+
+### 🌐 Local Development Server
+
+```bash
+# Serve a static website with full debug logging
+bob serve ./website -l debug
+```
+
+### 🌳 Project Structure Exploration
+
+```bash
+# Explore project structure with custom depth
+bob tree ./src -d 5
+
+# Display directory tree structure
+# - without an indentation character,
+# - indentation of 4 spaces
+# - showing hidden files
+bob tree ./project -h -i 4 -c " "
 ```
 
 ## 🗂️ Storage
