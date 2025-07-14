@@ -19,5 +19,8 @@ export default function serveCommand(args: ArgumentsCamelCase<ServeCommandArgs>)
 
   BobLogger.Instance.setLogLevel(logLevel);
 
-  new BobServer(absolutePath).listen(args.port, args.open);
+  new BobServer(absolutePath).listen(args.port, {
+    openInBrowser: args.open,
+    watch: args.watch,
+  });
 }

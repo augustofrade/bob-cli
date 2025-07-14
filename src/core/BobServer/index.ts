@@ -2,6 +2,7 @@ import { exec } from "child_process";
 import http from "http";
 import { platform } from "os";
 import BobLogger from "../BobLogger";
+import { BobServerOptions } from "./BobServerOptions";
 import BobServerRequestHandler from "./RequestHandler";
 
 /**
@@ -19,7 +20,7 @@ export default class BobServer {
    * Starts the server and listens on the specified port.
    * @param port The port number to listen on.
    */
-  public listen(port: number, openInBrowser: boolean) {
+  public listen(port: number, options: BobServerOptions) {
     console.log(`Serving directory ${this.directory}`);
 
     const server = http.createServer(this.requestHandler.handleRequest.bind(this.requestHandler));
@@ -28,7 +29,7 @@ export default class BobServer {
 
     server.listen(port, () => {
       console.log(`Server is running at ${address}`);
-      if (openInBrowser) {
+      if (options.openInBrowser) {
         const platformCommand = platform() === "win32" ? "start" : "open";
         exec(`${platformCommand} ${address}`);
       }
