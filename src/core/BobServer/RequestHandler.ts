@@ -9,6 +9,7 @@ import mimeTypes from "./mime-types";
  */
 export default class BobServerRequestHandler {
   private logger: BobLogger = BobLogger.Instance;
+  private webSocketPort?: number;
 
   public constructor(private directory: string) {}
 
@@ -105,5 +106,9 @@ export default class BobServerRequestHandler {
     }
 
     return requestUrl;
+  }
+
+  public injectWebSocketClient(port: number) {
+    this.webSocketPort = port;
   }
 }

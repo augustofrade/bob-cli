@@ -20,8 +20,12 @@ export default class BobServer {
    * Starts the server and listens on the specified port.
    * @param port The port number to listen on.
    */
-  public listen(port: number, options: BobServerOptions) {
+  public listen(port: number, options?: BobServerOptions) {
     console.log(`Serving directory ${this.directory}`);
+
+    if (options?.watch) {
+      this.requestHandler.injectWebSocketClient(port + 1);
+    }
 
     const server = http.createServer(this.requestHandler.handleRequest.bind(this.requestHandler));
 
@@ -29,7 +33,7 @@ export default class BobServer {
 
     server.listen(port, () => {
       console.log(`Server is running at ${address}`);
-      if (options.openInBrowser) {
+      if (options?.openInBrowser) {
         const platformCommand = platform() === "win32" ? "start" : "open";
         exec(`${platformCommand} ${address}`);
       }
