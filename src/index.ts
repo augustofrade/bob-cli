@@ -19,11 +19,12 @@ try {
   if (knowledgeNotFound) {
     console.log("Couldn't find my knowledge base. Setting everything up...\n");
   }
-  main();
 } catch (error) {
   console.log(error);
   console.log("Something happened while setting up my knowledge base. Please try again.");
+  process.exit(1);
 }
+main();
 
 function main() {
   yargs(hideBin(process.argv))
