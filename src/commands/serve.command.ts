@@ -8,6 +8,7 @@ interface ServeCommandArgs {
   port: number;
   directory?: string;
   open: boolean;
+  watch: boolean;
   logLevel: string;
 }
 

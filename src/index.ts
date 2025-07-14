@@ -216,6 +216,13 @@ function main() {
             type: "boolean",
             default: true,
           })
+          .option("watch", {
+            alias: "w",
+            describe:
+              "Watch for changes in the served directory and reload the page if there is any",
+            type: "boolean",
+            default: true,
+          })
           .option("log-level", {
             alias: "l",
             describe: "Sets the log level for the server output",
