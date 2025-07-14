@@ -47,6 +47,12 @@ export default class BobServer {
     });
   }
 
+  /**
+   * Handles watch mode for the server. Acts just as a wrapper to enable or disable directory watching.
+   *
+   * @param port Port specified by the user for the server to listen on.
+   * @param watchDirectory Whether to enable watch mode for the directory.
+   */
   private handleWatchMode(port: number, watchDirectory: boolean) {
     if (watchDirectory) {
       this.watchDirectory(this.directory, port);
@@ -54,6 +60,10 @@ export default class BobServer {
     }
   }
 
+  /**
+   * Watches the specified directory for changes and sends a "refresh" message to connected clients
+   * through websocket when a change in any files within the directory is detected.
+   */
   private watchDirectory(directory: string, port: number) {
     this.logger.logDebug(`Watching directory: ${directory}`);
 

@@ -113,6 +113,13 @@ export default class BobServerRequestHandler {
     return requestUrl;
   }
 
+  /**
+   * Handles HTML files by injecting the WebSocket client script if a WebSocket server is available.
+   *
+   * May be extended for other purposes.
+   * @param data The HTML file content as a Buffer.
+   * @returns The modified HTML content as a Buffer.
+   */
   private handleHtmlFile(data: Buffer): Buffer {
     if (this.bobWebSocket === undefined) {
       return data;
