@@ -17,6 +17,7 @@ Bob was created as a mean to save repetitive stuff that is used in the terminal 
 - 🧠 **Learn Actions**: Teach Bob new actions with custom content
 - 🚀 **Execute Actions**: Run previously learnt actions
 - 📝 **Multiple Action Content Types**: Support for plain text, files, directories, scripts, and more
+- 🌐 **HTTP Server with hot realod**: Serve static content in a local HTTP server with hot reload
 - 📱 **QR Code Generation**: Create QR codes on the fly for content passed as positional argument or through stdin
 - 🔍 **Regex Testing**: Test regex patterns
 - 💾 **Persistent Storage**: Bob remembers everything you teach him
@@ -151,17 +152,18 @@ bob serve [directory] [options]
 **Options:**
 
 - `--port, -p <number>`: Port to run the server on (default: 3000)
+- `--watch, -w`: Watch the directory Bob is serving for hot reloading (default: true)
 - `--open, -o`: Opens the served directory in the default web browser (default: true)
 - `--log-level, -l <level>`: Sets the log level for server output (choices: "info", "debug", "verbose", default: "info")
 
 **Examples:**
 
 ```bash
-# Serve the current directory on default port (3000)
+# Serve the current directory on default port (3000) in watch mode
 bob serve
 
-# Serve a specific directory on custom port
-bob serve ~/Documents/portfolio -p 8080
+# Serve a specific directory on custom port without watching the directory contents
+bob serve ~/Documents/portfolio -p 8080 --watch false
 ```
 
 **Logging Output Example:**
