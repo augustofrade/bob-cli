@@ -2,6 +2,7 @@ import fs from "fs";
 import { IncomingMessage, ServerResponse } from "http";
 import path from "path";
 import BobLogger from "../BobLogger";
+import BobWebSocket from "../BobWebSocket";
 import injectWebSocketClientScript from "../BobWebSocket/inject-web-socket-script";
 import mimeTypes from "./mime-types";
 
@@ -124,5 +125,14 @@ export default class BobServerRequestHandler {
 
   public withWebSocketWatcher(port: number) {
     this.watchPort = port;
+    const bobSocket = new BobWebSocket(port).listen();
+
+    fs.watch(this.directory, { recursive: true }, (eventType, filename) => {
+      console.log(eventType);
+      if (eventType === "change" && filename) {
+        this.logger.logDebug(`File changed: ${filename}. Reloading...`);
+        bobSocket.sendMessage("reload");
+      }
+    });
   }
 }
