@@ -11,7 +11,7 @@ import mimeTypes from "./mime-types";
  */
 export default class BobServerRequestHandler {
   private logger: BobLogger = BobLogger.Instance;
-  private watchPort?: number;
+  public bobWebSocket?: BobWebSocket;
 
   public constructor(private directory: string) {}
 
@@ -114,25 +114,12 @@ export default class BobServerRequestHandler {
   }
 
   private handleHtmlFile(data: Buffer): Buffer {
-    if (this.watchPort === undefined) {
+    if (this.bobWebSocket === undefined) {
       return data;
     }
 
     const htmlString = data.toString("utf8");
-    const modifiedHtml = injectWebSocketClientScript(htmlString, this.watchPort);
+    const modifiedHtml = injectWebSocketClientScript(htmlString, this.bobWebSocket.port);
     return Buffer.from(modifiedHtml, "utf8");
-  }
-
-  public withWebSocketWatcher(port: number) {
-    this.watchPort = port;
-    const bobSocket = new BobWebSocket(port).listen();
-
-    fs.watch(this.directory, { recursive: true }, (eventType, filename) => {
-      console.log(eventType);
-      if (eventType === "change" && filename) {
-        this.logger.logDebug(`File changed: ${filename}. Reloading...`);
-        bobSocket.sendMessage("reload");
-      }
-    });
   }
 }
