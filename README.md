@@ -17,7 +17,7 @@ Bob was created as a mean to save repetitive stuff that is used in the terminal 
 - 🧠 **Learn Actions**: Teach Bob new actions with custom content
 - 🚀 **Execute Actions**: Run previously learnt actions
 - 📝 **Multiple Action Content Types**: Support for plain text, files, directories, scripts, and more
-- 🌐 **HTTP Server with hot realod**: Serve static content in a local HTTP server with hot reload
+- 🌐 **HTTP Server with hot reload**: Serve static content in a local HTTP server with hot reload
 - 📱 **QR Code Generation**: Create QR codes on the fly for content passed as positional argument or through stdin
 - 🔍 **Regex Testing**: Test regex patterns
 - 💾 **Persistent Storage**: Bob remembers everything you teach him
