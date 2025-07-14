@@ -2,6 +2,7 @@ import fs from "fs";
 import { IncomingMessage, ServerResponse } from "http";
 import path from "path";
 import BobLogger from "../BobLogger";
+import injectWebSocketClientScript from "../BobWebSocket/inject-web-socket-script";
 import mimeTypes from "./mime-types";
 
 /**
@@ -9,7 +10,7 @@ import mimeTypes from "./mime-types";
  */
 export default class BobServerRequestHandler {
   private logger: BobLogger = BobLogger.Instance;
-  private webSocketPort?: number;
+  private watchPort?: number;
 
   public constructor(private directory: string) {}
 
@@ -70,6 +71,9 @@ export default class BobServerRequestHandler {
         }
 
         const extension = path.extname(filePath) as unknown as keyof typeof mimeTypes;
+        if (extension === ".html") {
+          data = this.handleHtmlFile(data);
+        }
 
         res.writeHead(200, { "content-type": this.getMimeType(extension) });
         res.end(data);
@@ -108,7 +112,17 @@ export default class BobServerRequestHandler {
     return requestUrl;
   }
 
-  public injectWebSocketClient(port: number) {
-    this.webSocketPort = port;
+  private handleHtmlFile(data: Buffer): Buffer {
+    if (this.watchPort === undefined) {
+      return data;
+    }
+
+    const htmlString = data.toString("utf8");
+    const modifiedHtml = injectWebSocketClientScript(htmlString, this.watchPort);
+    return Buffer.from(modifiedHtml, "utf8");
+  }
+
+  public withWebSocketWatcher(port: number) {
+    this.watchPort = port;
   }
 }

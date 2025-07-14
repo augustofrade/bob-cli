@@ -24,7 +24,7 @@ export default class BobServer {
     console.log(`Serving directory ${this.directory}`);
 
     if (options?.watch) {
-      this.requestHandler.injectWebSocketClient(port + 1);
+      this.requestHandler.withWebSocketWatcher(port + 1);
     }
 
     const server = http.createServer(this.requestHandler.handleRequest.bind(this.requestHandler));
