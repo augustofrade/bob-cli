@@ -58,8 +58,11 @@ export default class ActionHandler {
   }
 
   private static handleAliasAction(action: BobActionData): Promise<string> {
+    const argv = process.argv.slice(4).map((arg) => (arg.includes(" ") ? `"${arg}"` : arg));
+    const command = `${action.content} ${argv.join(" ")}`;
+
     return new Promise(async (resolve, reject) => {
-      const child = spawn(action.content, { shell: true });
+      const child = spawn(command, { shell: true });
       for await (const data of child.stdout) {
         console.log(data.toString());
       }
