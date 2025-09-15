@@ -7,6 +7,7 @@ import doCommand from "./commands/do.command";
 import forgetCommand from "./commands/forget.command";
 import helloCommand from "./commands/hello.command";
 import learnCommand from "./commands/learn.command";
+import minifyCommand from "./commands/minify.command";
 import qrCommand from "./commands/qr.command";
 import regexCommand from "./commands/regex.command";
 import serveCommand from "./commands/serve.command";
@@ -236,6 +237,23 @@ function main() {
           );
       },
       serveCommand
+    )
+    .command(
+      "minify <files...>",
+      "Minifies the specified CSS files",
+      (yargs) => {
+        yargs
+          .positional("files", {
+            describe: "Files to be minified.",
+            type: "string",
+          })
+          .option("output", {
+            alias: "o",
+            type: "string",
+          })
+          .example("bob minify index.css header.css", "Minifies both index.css and header.css");
+      },
+      minifyCommand
     )
     .command(
       "tellme [action_name]",
