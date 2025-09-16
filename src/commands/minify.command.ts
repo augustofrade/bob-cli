@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import { basename, extname, join } from "path";
+import { basename, dirname, extname, join } from "path";
 import { ArgumentsCamelCase } from "yargs";
 import BobLogger from "../core/BobLogger";
 import getAbsolutePath from "../helpers/get-absolute-path";
@@ -7,19 +7,33 @@ import getAbsolutePath from "../helpers/get-absolute-path";
 interface MinifyCommandArgs {
   files: string[];
   output: string | undefined;
+  singlefile: boolean;
 }
 
 const logger = BobLogger.Instance.setLogLevel(2);
 
 export default async function minifyCommand(args: ArgumentsCamelCase<MinifyCommandArgs>) {
-  let { output: outputDir } = args;
+  if (args.singlefile) {
+    return runSingleFileMode(getAbsolutePath(args.output ?? "styles.min.css"), args.files);
+  }
+
+  return runDefaultMode(args.output, args.files);
+}
+
+/**
+ * Default mode in which all the *.css files are minified into their *.min.css counterpart.
+ * @param outputDir Directory defined by the user
+ * @param files File paths
+ */
+async function runDefaultMode(outputDir: string | undefined, files: string[]) {
   if (outputDir) {
     await fs.mkdir(outputDir, { recursive: true });
+    logger.logInfo(`Output directory: ${getAbsolutePath(outputDir)}`);
   } else {
     outputDir = "";
   }
 
-  for await (let path of iterateFiles(args.files)) {
+  for await (let path of iterateFiles(files)) {
     const { content, basename, resultFilename } = await handleFile(path);
 
     const outputPath = getAbsolutePath(join(outputDir, resultFilename));
@@ -28,6 +42,34 @@ export default async function minifyCommand(args: ArgumentsCamelCase<MinifyComma
   }
 }
 
+/**
+ * Single File mode in which all the *.css are bundled into a <output>.min.css file.
+ * @param output Output file defined by the user
+ * @param files File paths
+ */
+async function runSingleFileMode(output: string, files: string[]) {
+  const dir = dirname(output);
+  if (dir !== ".") {
+    await fs.mkdir(dir, { recursive: true });
+  }
+
+  let fullContent = "";
+  let filesHandled = 0;
+  for await (let path of iterateFiles(files)) {
+    const { content } = await handleFile(path);
+    fullContent += content;
+    filesHandled++;
+  }
+
+  await fs.writeFile(getAbsolutePath(output), fullContent, "utf-8");
+  logger.logInfo(`Minified and bundled ${filesHandled} files to ${output}`);
+}
+
+/**
+ * Handles the file minification and name resolving
+ * @param path File Path
+ * @returns
+ */
 async function handleFile(path: string) {
   let content = await fs.readFile(path, "utf-8");
 
@@ -53,6 +95,11 @@ function minifyFile(content: string): string {
   return content;
 }
 
+/**
+ * Yields all the provided file paths by leveraging them.
+ * Ex: [style.css, styles/] -> [style.css, styles/home.css, styles/modal.css]
+ * @param paths
+ */
 async function* iterateFiles(paths: string[]) {
   const hasValidExtension = (filename: string) => {
     const extension = extname(filename);

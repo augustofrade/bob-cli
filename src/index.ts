@@ -247,6 +247,12 @@ function main() {
             describe: "Files to be minified.",
             type: "string",
           })
+          .option("singlefile", {
+            alias: "s",
+            description: "Bundles the minified CSS content into a singe file.",
+            type: "boolean",
+            default: false,
+          })
           .option("output", {
             alias: "o",
             type: "string",
