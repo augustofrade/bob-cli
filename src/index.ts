@@ -240,7 +240,9 @@ function main() {
     )
     .command(
       "minify <files...>",
-      "Minifies the specified CSS files",
+      "Minifies the specified CSS files. If no '--output' is passed, the minified content will be generated in the current directory (" +
+        process.cwd() +
+        ")",
       (yargs) => {
         yargs
           .positional("files", {
@@ -249,7 +251,8 @@ function main() {
           })
           .option("singlefile", {
             alias: "s",
-            description: "Bundles the minified CSS content into a singe file.",
+            description:
+              "Bundles the minified CSS content into a singe file.\nIf this is used, '--output' must be a path to a file",
             type: "boolean",
             default: false,
           })
