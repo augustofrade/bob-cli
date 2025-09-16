@@ -6,14 +6,25 @@ import getAbsolutePath from "../helpers/get-absolute-path";
 
 interface MinifyCommandArgs {
   files: string[];
-  outputDir: string | undefined;
+  output: string | undefined;
 }
 
 const logger = BobLogger.Instance.setLogLevel(2);
 
 export default async function minifyCommand(args: ArgumentsCamelCase<MinifyCommandArgs>) {
+  let { output: outputDir } = args;
+  if (outputDir) {
+    await fs.mkdir(outputDir, { recursive: true });
+  } else {
+    outputDir = "";
+  }
+
   for await (let path of iterateFiles(args.files)) {
-    await handleFile(path);
+    const { content, basename, resultFilename } = await handleFile(path);
+
+    const outputPath = getAbsolutePath(join(outputDir, resultFilename));
+    await fs.writeFile(outputPath, content, "utf-8");
+    logger.logInfo(`Minified ${basename} to ${resultFilename}`);
   }
 }
 
@@ -24,7 +35,11 @@ async function handleFile(path: string) {
 
   const filename = basename(path, ".css");
   const resultFilename = filename + ".min.css";
-  logger.logInfo(`Minified ${filename}.css to ${resultFilename}`);
+  return {
+    content,
+    basename: filename + ".css",
+    resultFilename,
+  };
 }
 
 function minifyFile(content: string): string {
@@ -33,7 +48,8 @@ function minifyFile(content: string): string {
     .replace(/\/\*.*\*\//g, "")
     .replace(/\s+/g, " ")
     .replace(/\s*([{;:,])\s*/g, "$1")
-    .replace(/;}/g, "}");
+    .replace(/;}/g, "}")
+    .trim();
   return content;
 }
 
@@ -41,7 +57,7 @@ async function* iterateFiles(paths: string[]) {
   const hasValidExtension = (filename: string) => {
     const extension = extname(filename);
     if (extension !== ".css") {
-      logger.logError("Invalid file type, found: " + extension);
+      logger.logError("Invalid file type, found: " + extension + "\n");
       return false;
     }
     return true;
