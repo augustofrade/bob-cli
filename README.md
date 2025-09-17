@@ -18,6 +18,7 @@ Bob was created as a mean to save repetitive stuff that is used in the terminal 
 - 🚀 **Execute Actions**: Run previously learnt actions
 - 📝 **Multiple Action Content Types**: Support for plain text, files, directories, scripts, and more
 - 🌐 **HTTP Server with hot reload**: Serve static content in a local HTTP server with hot reload
+- 💽 **CSS Minification**: Minify and optionally bundle CSS files
 - 📱 **QR Code Generation**: Create QR codes on the fly for content passed as positional argument or through stdin
 - 🔍 **Regex Testing**: Test regex patterns
 - 💾 **Persistent Storage**: Bob remembers everything you teach him
@@ -184,6 +185,72 @@ Server is running at http://localhost:3000
 [DEBUG]    Resolved file path: /home/user/Documents/portfolio/assets/dog.jpg
 ```
 
+### 💽 Minify Command
+
+Minify `*.css` files into their `*.min.css` counterparts or bundle them all together into a single file.
+
+Multiple file and directory paths can be passed to the minification process and will be processed **in the order they are passed**.
+If your CSS has to be loaded from the client in a specific order, consider passing the path to each file of the source directory in the desired order.
+
+If no output is specified, the minified content will be saved in the current working directory.
+
+```bash
+bob minify [files...] [options]
+```
+
+**Options:**
+
+- `--output, -o <string>`: Output directory of the minified files; if `--singlefile` used, it is the output **file**. If not passed,
+- `--singlefile, -o`: Bundles all minified content into a single file. The default output file is `styles.min.css` if `--output`is not used.
+
+**Examples:**
+
+```bash
+# Minifies all files of the current directory. Output in the same directory
+bob minify
+
+# Minifies all files of the passed directory. Output in the current directory
+bob minify styles
+
+# Minifies all files into an output directory
+bob minify styles -o dist
+
+# Minifies multiple files from different directories into a single file
+bob minify styles dir1/style1.css dir2/style2.css --output site.min.css --singlefile
+```
+
+**Input and output:**
+
+```css
+
+/* INPUT */
+body {
+  user-drag: none;
+  /*
+
+  first comment
+
+  */
+  user-select: none;
+  /*
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  margin: 0;
+*/
+}
+
+#container {
+  width: 100vw;
+  ...
+}
+
+/* OUTPUT */
+body{user-drag:none}#container{width:100vw;...}
+
+```
+
 ### 🌳 Tree Command
 
 Display a tree structure of the specified directory with customizable depth and formatting.
@@ -339,6 +406,14 @@ bob do docker_clean
 ```bash
 # Serve a static website with full debug logging
 bob serve ./website -l debug
+```
+
+### 💽 Minify Command
+
+```bash
+
+# Minifies multiple files and directories into a single file
+bob minify styles ../single.css --output site.min.css --singlefile
 ```
 
 ### 🌳 Project Structure Exploration
