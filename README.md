@@ -1,5 +1,7 @@
 # Bob
 
+> Check out [Stuart SSG](https://github.com/augustofrade/stuart-ssg), Bob's companion!
+
 Bob is your CLI buddy aimed to help you with your needs. Bob can remember and execute custom actions as well as do some of them on the fly through commands.
 
 Content passed to actions to be learnt can be passed through stdin or as positional parameters.
@@ -7,6 +9,8 @@ Content passed to actions to be learnt can be passed through stdin or as positio
 Bob was made to be quick and easy to use, as well as a familiar and a relaxed experience.
 That's why I named it Bob and didn't follow a standardized command naming approach, such as `bob <command> <subcommand>` (e.g.: `bob actions add`),
 for its core commands, and used common day-to-day english verbs instead, namely `forget` and `do`. In the end, it feels as if the user is asking a friend to do something to help them: `bob do open_teddies_folder`.
+
+Bob can do much more, check the Features section below!
 
 ## ℹ️ About
 
