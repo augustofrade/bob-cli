@@ -1,3 +1,4 @@
+import { existsSync } from "fs";
 import fs from "fs/promises";
 import path from "path";
 import { ArgumentsCamelCase } from "yargs";
@@ -14,8 +15,10 @@ interface MinifyCommandArgs {
 const logger = BobLogger.Instance.setLogLevel(2);
 
 export default async function minifyCommand(args: ArgumentsCamelCase<MinifyCommandArgs>) {
+  if (args.files.length === 0) args.files.push(".");
+
   if (args.singlefile) {
-    return await runSingleFileMode(getAbsolutePath(args.output ?? "styles.min.css"), args.files);
+    return await runSingleFileMode(args.output, args.files);
   }
 
   return await runDefaultMode(args.output, args.files);
@@ -46,20 +49,25 @@ async function runDefaultMode(output: string = "", files: string[]) {
 }
 
 /**
- * Single File mode in which all the *.css are bundled into a <output>.min.css file.
+ * Single File mode in which all the *.css are bundled into an \<output> file.
  * @param output Output file defined by the user
  * @param files File paths
  */
 async function runSingleFileMode(output: string = "styles.min.css", files: string[]) {
-  const minifier = new CssMinifier();
+  output = getAbsolutePath(output);
 
   const dir = path.dirname(output);
-  if (dir !== ".") {
+  const basename = path.basename(output);
+  if (!existsSync(dir)) {
     await fs.mkdir(dir, { recursive: true });
   }
 
+  // parse malformed value passed by the user
+  output = path.join(dir, basename);
+
   let fullContent = "";
 
+  const minifier = new CssMinifier();
   minifier
     .each((_, file) => {
       fullContent += file.content;

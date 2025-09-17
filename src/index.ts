@@ -239,7 +239,7 @@ function main() {
       serveCommand
     )
     .command(
-      "minify <files...>",
+      "minify [files...]",
       "Minifies the specified CSS files. If no '--output' is passed, the minified content will be generated in the current directory (" +
         process.cwd() +
         ")",
