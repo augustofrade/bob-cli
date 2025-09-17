@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import { extname, join } from "path";
+import { join } from "path";
 import getAbsolutePath from "../../helpers/get-absolute-path";
 import BobLogger from "../BobLogger";
 
@@ -10,35 +10,32 @@ import BobLogger from "../BobLogger";
  */
 const logger = BobLogger.Instance;
 
+function hasValidExtension(filename: string) {
+  return !filename.endsWith(".min.css") && filename.endsWith(".css");
+}
+
 export async function* iterateFiles(paths: string[]) {
-  const hasValidExtension = (filename: string) => {
-    const extension = extname(filename);
-    if (extension !== ".css") {
-      logger.logError("Invalid file type, found: " + extension + "\n");
-      return false;
-    }
-    return true;
-  };
-
-  const abs = getAbsolutePath;
-
   for (let path of paths) {
     try {
-      let fullPath = abs(path);
+      let fullPath = getAbsolutePath(path);
       const pathStats = await fs.stat(fullPath);
-      if (pathStats.isFile()) {
+
+      if (pathStats.isFile() && hasValidExtension(path)) {
         logger.logDebug("Handling file " + path);
-        if (!hasValidExtension(path)) continue;
         yield fullPath;
       }
+
       if (pathStats.isDirectory()) {
         logger.logVerbose("Reading directory " + path);
-        const pathFiles = await fs.readdir(abs(path), { withFileTypes: true, recursive: true });
-        for (let pathFile of pathFiles) {
-          logger.logDebug("Handling file " + pathFile.name);
-          if (!pathFile.isFile()) continue;
-          if (!hasValidExtension(pathFile.name)) continue;
-          yield join(pathFile.parentPath, pathFile.name);
+        const nestedFiles = await fs.readdir(getAbsolutePath(path), {
+          withFileTypes: true,
+          recursive: true,
+        });
+
+        for (let nestedFile of nestedFiles) {
+          if (!nestedFile.isFile() || !hasValidExtension(nestedFile.name)) continue;
+          logger.logDebug("Handling file " + nestedFile.name);
+          yield join(nestedFile.parentPath, nestedFile.name);
         }
       }
     } catch (error) {
