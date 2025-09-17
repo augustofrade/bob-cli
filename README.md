@@ -200,7 +200,7 @@ bob minify [files...] [options]
 
 **Options:**
 
-- `--output, -o <string>`: Output directory of the minified files; if `--singlefile` used, it is the output **file**. If not passed,
+- `--output, -o <string>`: Output directory of the minified files; if `--singlefile` used, it is the output **file**.
 - `--singlefile, -o`: Bundles all minified content into a single file. The default output file is `styles.min.css` if `--output`is not used.
 
 **Examples:**
