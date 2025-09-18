@@ -24,6 +24,7 @@ Bob was created as a mean to save repetitive stuff that is used in the terminal 
 - 🌐 **HTTP Server with hot reload**: Serve static content in a local HTTP server with hot reload
 - 💽 **CSS Minification**: Minify and optionally bundle CSS files
 - 📱 **QR Code Generation**: Create QR codes on the fly for content passed as positional argument or through stdin
+- 🗄 **UUID generation**: Swiftly generate UUIDs
 - 🔍 **Regex Testing**: Test regex patterns
 - 💾 **Persistent Storage**: Bob remembers everything you teach him
 
@@ -317,6 +318,20 @@ bob qr https://www.youtube.com/watch?v=dQw4w9WgXcQ -o qr.svg
 # Encode the text content provided through stdin
 echo "https://www.youtube.com/watch?v=dQw4w9WgXcQ" | bob qr
 ```
+
+### 🗄 UUID Command
+
+Generate a random version 4 UUID in the stdout.
+
+This command is a convenient CLI wrapper for the NodeJS built-in UUID generator.
+
+```bash
+bob uuid [options]
+```
+
+**Options**:
+
+- `--no-cache, -c`: Generates UUID with no random data cache.
 
 ### 🔍 Regex Command
 

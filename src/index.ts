@@ -13,6 +13,7 @@ import regexCommand from "./commands/regex.command";
 import serveCommand from "./commands/serve.command";
 import tellmeCommand from "./commands/tellme.command";
 import treeCommand from "./commands/tree.command";
+import uuidCommand from "./commands/uuid.command";
 import ActionManager from "./core/ActionManager";
 
 try {
@@ -275,6 +276,18 @@ function main() {
         });
       },
       tellmeCommand
+    )
+    .command(
+      "uuid",
+      "Bob generates a random version 4 UUID",
+      (yargs) => {
+        yargs.option("no-cache", {
+          alias: "c",
+          type: "boolean",
+          default: false,
+        });
+      },
+      uuidCommand
     )
     .command("hello", "BOB greets you", () => {}, helloCommand)
     .version(false)
