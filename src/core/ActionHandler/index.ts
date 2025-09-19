@@ -6,8 +6,10 @@ import { BobActionData, BobActionType } from "../../types/BobAction";
 import BobTemplate from "../BobTemplate";
 import ScriptHandler from "../ScriptHandler";
 
+type BobDoFn = (action: BobActionData, argv: string[]) => Promise<string>;
+
 export default class ActionHandler {
-  private static handlers: Record<BobActionType, (action: BobActionData) => Promise<string>> = {
+  private static handlers: Record<BobActionType, BobDoFn> = {
     file: this.handleFileAction,
     text: this.handleTextualAction,
     dir: this.handleTextualAction,
@@ -19,22 +21,22 @@ export default class ActionHandler {
     template: this.handleTemplateAction,
   };
 
-  public static handle(action: BobActionData): Promise<string> {
+  public static handle(action: BobActionData, argv: string[]): Promise<string> {
     const handler = this.handlers[action.type];
     if (!handler) {
       return Promise.reject(`I don't know how to do actions of the type ${action.type}`);
     }
-    return handler(action);
+    return handler(action, argv);
   }
 
-  private static handleTextualAction(action: BobActionData): Promise<string> {
+  private static handleTextualAction(action: BobActionData, argv: string[]): Promise<string> {
     return new Promise((resolve) => {
       console.log(action.content);
       resolve(action.content);
     });
   }
 
-  private static handleScriptAction(action: BobActionData): Promise<string> {
+  private static handleScriptAction(action: BobActionData, argv: string[]): Promise<string> {
     if (!fs.existsSync(action.content))
       return Promise.reject(`Script not found: ${action.content}`);
 
@@ -46,7 +48,7 @@ export default class ActionHandler {
       );
     }
 
-    const command = scriptHandler.withArgv(process.argv.slice(4)).getCommand();
+    const command = scriptHandler.withArgv(argv).getCommand();
 
     return new Promise((resolve, reject) => {
       exec(command, (error, stdout, stderr) => {
@@ -59,9 +61,9 @@ export default class ActionHandler {
     });
   }
 
-  private static handleAliasAction(action: BobActionData): Promise<string> {
-    const argv = process.argv.slice(4).map((arg) => (arg.includes(" ") ? `"${arg}"` : arg));
-    const command = `${action.content} ${argv.join(" ")}`;
+  private static handleAliasAction(action: BobActionData, argv: string[]): Promise<string> {
+    const argvString = argv.map((arg) => (arg.includes(" ") ? `"${arg}"` : arg)).join(" ");
+    const command = `${action.content} ${argvString}`;
 
     return new Promise(async (resolve, reject) => {
       const child = spawn(command, { shell: true });
@@ -72,7 +74,7 @@ export default class ActionHandler {
     });
   }
 
-  private static handleOpenAction(action: BobActionData): Promise<string> {
+  private static handleOpenAction(action: BobActionData, argv: string[]): Promise<string> {
     const platformCommand = platform() === "win32" ? "start" : "open";
     return new Promise((resolve, reject) => {
       exec(`${platformCommand} ${action.content}`, (error, stdout, stderr) => {
@@ -85,7 +87,7 @@ export default class ActionHandler {
     });
   }
 
-  private static handleFileAction(action: BobActionData): Promise<string> {
+  private static handleFileAction(action: BobActionData, argv: string[]): Promise<string> {
     return new Promise(async (resolve, reject) => {
       fs.readFile(action.content, "utf-8", (err, data) => {
         if (err) {
@@ -98,7 +100,7 @@ export default class ActionHandler {
     });
   }
 
-  private static handleQrAtion(action: BobActionData): Promise<string> {
+  private static handleQrAtion(action: BobActionData, argv: string[]): Promise<string> {
     return new Promise((resolve) => {
       const ascii = encodeQR(action.content, "term");
       console.log(ascii);
@@ -106,7 +108,7 @@ export default class ActionHandler {
     });
   }
 
-  private static handleListDirAction(action: BobActionData): Promise<string> {
+  private static handleListDirAction(action: BobActionData, argv: string[]): Promise<string> {
     return new Promise((resolve, reject) => {
       fs.readdir(action.content, { withFileTypes: true }, (err, files) => {
         if (err) {
@@ -121,9 +123,9 @@ export default class ActionHandler {
     });
   }
 
-  private static handleTemplateAction(action: BobActionData): Promise<string> {
+  private static handleTemplateAction(action: BobActionData, argv: string[]): Promise<string> {
     return new Promise((resolve, reject) => {
-      BobTemplate.copyTemplate(action.content, process.argv[4])
+      BobTemplate.copyTemplate(action.content, argv[0])
         .then(([filename, parsedSourceFilename]) => {
           console.log(`Created ${filename} from template ${parsedSourceFilename}`);
           resolve("");

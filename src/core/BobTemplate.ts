@@ -35,7 +35,6 @@ export default class BobTemplate {
    */
   public static async save(sourceFilePath: string): Promise<string> {
     try {
-      console.log("mano");
       const fileContent = await fs.readFile(sourceFilePath);
       const newFilename = shortId() + "-" + path.basename(sourceFilePath);
       const newPath = this.templatePath(newFilename);

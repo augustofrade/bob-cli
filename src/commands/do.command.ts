@@ -3,7 +3,6 @@ import ActionHandler from "../core/ActionHandler";
 import ActionManager from "../core/ActionManager";
 import listLearntActions from "../helpers/listLearntActions";
 import { BobActionData } from "../types/BobAction";
-
 interface DoCommandArgs {
   action_name?: string;
 }
@@ -24,8 +23,11 @@ export default async function doCommand(args: ArgumentsCamelCase<DoCommandArgs>)
     return await listLearntActions();
   }
 
-  ActionHandler.handle({
-    actionName: args.action_name,
-    ...action,
-  }).catch((e) => console.log(e));
+  ActionHandler.handle(
+    {
+      actionName: args.action_name,
+      ...action,
+    },
+    process.argv.slice(4)
+  ).catch((e) => console.log(e));
 }
