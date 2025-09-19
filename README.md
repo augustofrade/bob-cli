@@ -90,6 +90,7 @@ bob learn <action_name> <content> [options]
   - `list-dir`: Directory listing\*
   - `script`: Executable script\*
   - `qr`: content that will be encoded to QR Code
+  - `template`: file that is saved in Bob's data and copied as a template later with `bob do <action>`
 - `--force, -f`: Tells bob to update its knowledge of the provided action
 
 \* Relative paths will be converted to absolute paths.
@@ -102,11 +103,24 @@ bob learn say_hello "Hello, World!"
 
 # Learn a path. Example result path: `/home/\<user\>/Documents/teddies
 bob learn teddies_folder ./teddies
+
+# Learn a script
+bob learn ruby_script main.rb --type script
+
+# Learn a template of a CSS file and use it later with or without a name/path
+bob learn css_template style.css --type template
+cd ~/website/styles
+bob do css_template # same as source file = style.css
+bob do css_template ~/portfolio/styles/main.css # another directory with another name
+
 ```
 
 ### 🎯 Do Command
 
 Execute a previously learnt action.
+
+**Note**: For script actions, Bob will try to call the runtime of the file first by its shebang
+and then by the command/file set in the PATH of the user's system.
 
 ```bash
 bob do <action_name>
@@ -118,8 +132,15 @@ bob do <action_name>
 # Execute the provided "say_hello" action
 bob do say_hello
 
-#Provide no action name to list all learnt actions
+# Provide no action name to list all learnt actions
 bob do
+
+## Run previously learnt Ruby script action
+bob do ruby_script
+
+## Use previously learnt template
+cd ~/website/src/components
+bob do react_card card.jsx
 ```
 
 ### 🗑️ Forget Command
