@@ -6,6 +6,7 @@ import JsonFS from "../JsonFS";
 export default class ActionManager {
   private static instance: ActionManager;
   private static readonly learntActionsDir: string = join(__dirname, "../../../data/");
+  public static readonly templatesDir: string = join(__dirname, "../../../data/templates");
   private static readonly learntActionsFile = join(this.learntActionsDir, "learntActions.json");
   private learntActions: null | BobActionCollection = null;
 
@@ -17,7 +18,7 @@ export default class ActionManager {
    * @return Whether a learnt actions file should be created or not.
    */
   public init(): boolean {
-    fs.mkdirSync(ActionManager.learntActionsDir, { recursive: true });
+    fs.mkdirSync(ActionManager.templatesDir, { recursive: true });
 
     if (fs.existsSync(ActionManager.learntActionsFile)) return false;
 

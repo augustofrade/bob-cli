@@ -6,7 +6,8 @@ export type BobActionType =
   | "script"
   | "qr"
   | "open"
-  | "alias";
+  | "alias"
+  | "template";
 
 export interface BobActionData {
   actionName: string;

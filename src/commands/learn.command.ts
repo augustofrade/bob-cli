@@ -4,6 +4,8 @@ import getAbsolutePath from "../helpers/get-absolute-path";
 import { BobActionType } from "../types/BobAction";
 
 import fs from "fs";
+import path from "path";
+import shortId from "../helpers/short-id";
 
 interface LearnCommandArgs {
   action_name: string;
@@ -27,7 +29,7 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
     console.log(`Updating knowledge of the action "${args.action_name}"...\n`);
   }
 
-  const fsActionTypes: BobActionType[] = ["dir", "file", "script", "list-dir"];
+  const fsActionTypes: BobActionType[] = ["dir", "file", "script", "list-dir", "template"];
   if (fsActionTypes.includes(args.type)) {
     args.content = getAbsolutePath(args.content);
   } else if (args.type === "open") {
@@ -35,6 +37,9 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
   }
 
   try {
+    if (args.type === "template") {
+      args.content = copyTemplateFileContent(args.content);
+    }
     await actionManager.saveLearntAction({
       actionName: args.action_name,
       content: args.content,
@@ -78,4 +83,17 @@ function handleOpenActionContent(content: string): string {
   const hasProtocol = content.startsWith("http://") || content.startsWith("https://");
   if (!hasProtocol) content = `http://${content}`;
   return content.replace(/\s/gi, "%20");
+}
+
+/**
+ * Copies the template file content to the Bob templates directory
+ * @param filePath
+ * @returns Template identifier as UUID
+ */
+function copyTemplateFileContent(filePath: string): string {
+  const fileContent = fs.readFileSync(filePath);
+  const newFilename = shortId() + "-" + path.basename(filePath);
+  const newPath = path.join(ActionManager.templatesDir, newFilename);
+  fs.writeFileSync(newPath, fileContent);
+  return newFilename;
 }

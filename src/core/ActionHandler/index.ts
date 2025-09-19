@@ -15,6 +15,7 @@ export default class ActionHandler {
     qr: this.handleQrAtion,
     open: this.handleOpenAction,
     alias: this.handleAliasAction,
+    template: this.handleTextualAction,
   };
 
   public static handle(action: BobActionData): Promise<string> {
