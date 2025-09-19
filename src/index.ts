@@ -3,6 +3,7 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import clearCommand from "./commands/clear.command";
+import defaultCommand from "./commands/default.command";
 import doCommand from "./commands/do.command";
 import forgetCommand from "./commands/forget.command";
 import helloCommand from "./commands/hello.command";
@@ -300,6 +301,7 @@ function main() {
       uuidCommand
     )
     .command("hello", "BOB greets you", () => {}, helloCommand)
+    .command("$0 [command]", "", () => {}, defaultCommand)
     .version(false)
     .help().argv;
 }
