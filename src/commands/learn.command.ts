@@ -17,8 +17,8 @@ interface LearnCommandArgs {
 export default async function learnCommand(args: ArgumentsCamelCase<LearnCommandArgs>) {
   args.action_name = args.action_name.trim().replace(/\s+/g, "-");
   const actionManager = ActionManager.Instance;
-  const learntActions = await actionManager.getLearntActions();
-  const alreadyLearnt = learntActions[args.action_name] !== undefined;
+  const learntAction = (await actionManager.getLearntActions())[args.action_name];
+  const alreadyLearnt = learntAction !== undefined;
 
   if (alreadyLearnt) {
     if (!args.force) {
@@ -37,11 +37,11 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
 
   try {
     if (args.type === "template") {
-      args.content = await BobTemplate.saveFromAction(
-        args.content,
-        learntActions[args.action_name]
-      );
+      args.content = await BobTemplate.saveFromAction(args.content, learntAction);
+    } else if (learntAction?.type === "template") {
+      await BobTemplate.remove(learntAction.content);
     }
+
     await actionManager.saveLearntAction({
       actionName: args.action_name,
       content: args.content,
