@@ -1,3 +1,5 @@
+import fs from "fs/promises";
+import path from "path";
 import { ArgumentsCamelCase } from "yargs";
 import ActionManager from "../core/ActionManager";
 import listLearntActions from "../helpers/listLearntActions";
@@ -20,6 +22,11 @@ export default async function tellmeCommand(args: ArgumentsCamelCase<TellmeComma
       `You can teach me how to do it with 'bob learn ${args.action_name} <content> --type <type>'.`
     );
     return;
+  }
+
+  if (action.type === "template") {
+    const filePath = path.join(ActionManager.templatesDir, action.content);
+    action.content = await fs.readFile(filePath, "utf8");
   }
 
   console.log("Description:  ", action.description || "No description provided.");
