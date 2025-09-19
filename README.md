@@ -391,16 +391,16 @@ Get a friendly greeting from Bob.
 bob hello
 ```
 
-### 📋 List Actions (Default Command)
+### 📋 Describe or list actions
 
-View all learnt actions. This is also the default command when no command is provided.
+The `tellme` command can either describe an action or list all learnt actions
 
 ```bash
+# List all actions (no arguments)
 bob tellme
 
-# or
-
-bob
+# Describe a learn action
+bob tellme <action_name>
 ```
 
 ## 🎯 Use Cases
