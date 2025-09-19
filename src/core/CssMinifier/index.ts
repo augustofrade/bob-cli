@@ -62,11 +62,12 @@ export class CssMinifier {
    */
   private minifyFile(content: string): string {
     content = content
-      .replace(/\n/g, "")
-      .replace(/\/\*.*\*\//g, "")
-      .replace(/\s+/g, " ")
-      .replace(/\s*([{;:,])\s*/g, "$1")
-      .replace(/;}/g, "}")
+      .replace(/^\s*/gm, "") // spaces at the beginning of lines
+      .replace(/\n/g, "") // line breaks
+      .replace(/\/\*[\s\S]*?\*\//g, "") // Comments
+      .replace(/\s+/g, " ") // Duplicate spaces
+      .replace(/\s*([{;:,])\s*/g, "$1") // Spaces after and/or before CSS separators
+      .replace(/;}/g, "}") // unnecessary semicolons before closing brackets
       .trim();
     return content;
   }

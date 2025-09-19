@@ -273,7 +273,7 @@ body {
 }
 
 /* OUTPUT */
-body{user-drag:none}#container{width:100vw;...}
+body{user-drag:none;user-select:none}#container{width:100vw;...}
 
 ```
 
