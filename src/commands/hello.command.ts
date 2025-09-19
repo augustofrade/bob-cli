@@ -1,5 +1,5 @@
 export default function helloCommand() {
-    console.log(`                                                                                 
+  console.log(`                                                                                 
                                                   .:::::.                                     
                                           ::::::::::::::::.-=========:                        
                                       ::::::::::::::::::::-=====++=======-                     
@@ -49,6 +49,6 @@ export default function helloCommand() {
                                         ####%%#@         %%%%##%%-                             
                                         *%@%*             %@%%%%                              
   
-Hello, I'm BOB!!
+Hello, I'm Bob!!
     `);
 }

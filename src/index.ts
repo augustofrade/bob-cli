@@ -35,7 +35,7 @@ function main() {
     .usage("Usage: $0 <command> [options]")
     .command(
       "learn <action_name> <content>",
-      "BOB Learns something new to do",
+      "Bob Learns something new to do",
       (yargs) => {
         return yargs
           .positional("action_name", {
@@ -65,7 +65,7 @@ function main() {
           })
           .option("force", {
             alias: "f",
-            describe: "Force learning the action even if BOB has already learnt it",
+            describe: "Force learning the action even if Bob has already learnt it",
             type: "boolean",
             default: false,
           })
@@ -82,7 +82,7 @@ function main() {
     )
     .command(
       "do [action_name]",
-      "BOB Executes a learnt action",
+      "Bob Executes a learnt action",
       (yargs) => {
         return yargs
           .positional("action_name", {
@@ -95,7 +95,7 @@ function main() {
     )
     .command(
       "forget <action_name>",
-      "BOB forgets a learnt action",
+      "Bob forgets a learnt action",
       (yargs) => {
         yargs.positional("action_name", {
           describe: "Name of the action to forget",
@@ -104,10 +104,10 @@ function main() {
       },
       forgetCommand
     )
-    .command("clear", "CLears BOB's memory", () => {}, clearCommand)
+    .command("clear", "Clears Bob's memory", () => {}, clearCommand)
     .command(
       "qr <content>",
-      "BOB generates a QR code for the given content",
+      "Bob generates a QR code for the given content",
       (yargs) => {
         return yargs
           .positional("content", {
@@ -128,7 +128,7 @@ function main() {
     )
     .command(
       "regex <pattern> [content]",
-      "BOB tests a regex pattern against the provided content.",
+      "Bob tests a regex pattern against the provided content.",
       (yargs) => {
         return yargs
           .positional("pattern", {
@@ -137,7 +137,7 @@ function main() {
           })
           .positional("content", {
             describe:
-              "Content that BOB will test against the regex pattern. If not provided, BOB will read from stdin.",
+              "Content that Bob will test against the regex pattern. If not provided, Bob will read from stdin.",
             type: "string",
           })
           .option("flags", {
@@ -156,7 +156,7 @@ function main() {
     )
     .command(
       "tree [directory]",
-      "BOB displays a tree structure of the specified directory within the specified depth",
+      "Bob displays a tree structure of the specified directory within the specified depth",
       (yargs) => {
         yargs
           .positional("directory", {
@@ -214,7 +214,7 @@ function main() {
     )
     .command(
       "serve [directory]",
-      "BOB starts a local server and serves the contents of the specified directory",
+      "Bob starts a local server and serves the contents of the specified directory",
       (yargs) => {
         yargs
           .option("port", {
@@ -278,11 +278,11 @@ function main() {
     )
     .command(
       "tellme [action_name]",
-      "Asks BOB about a learnt action",
+      "Asks Bob about a learnt action",
       (yargs) => {
         yargs.positional("action_name", {
           describe:
-            "Name of the action to ask about. If not provided, BOB lists all learnt actions.",
+            "Name of the action to ask about. If not provided, Bob lists all learnt actions.",
           type: "string",
         });
       },
@@ -300,7 +300,7 @@ function main() {
       },
       uuidCommand
     )
-    .command("hello", "BOB greets you", () => {}, helloCommand)
+    .command("hello", "Bob greets you", () => {}, helloCommand)
     .command("$0 [command]", "", () => {}, defaultCommand)
     .version(false)
     .help().argv;
