@@ -18,7 +18,9 @@ export interface BobActionData {
 }
 
 export interface BobActionCollection {
-  [actionName: string]: Omit<BobActionData, "actionName">;
+  [actionName: string]: BobActionSpecification;
 }
+
+export type BobActionSpecification = Omit<BobActionData, "actionName">;
 
 export type CreateBobAction = Omit<BobActionData, "learntAt">;

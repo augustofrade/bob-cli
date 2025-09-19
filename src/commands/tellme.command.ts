@@ -1,7 +1,6 @@
-import fs from "fs/promises";
-import path from "path";
 import { ArgumentsCamelCase } from "yargs";
 import ActionManager from "../core/ActionManager";
+import BobTemplate from "../core/BobTemplate";
 import listLearntActions from "../helpers/listLearntActions";
 
 interface TellmeCommandArgs {
@@ -25,8 +24,7 @@ export default async function tellmeCommand(args: ArgumentsCamelCase<TellmeComma
   }
 
   if (action.type === "template") {
-    const filePath = path.join(ActionManager.templatesDir, action.content);
-    action.content = await fs.readFile(filePath, "utf8");
+    action.content = await BobTemplate.read(action.content);
   }
 
   console.log("Description:  ", action.description || "No description provided.");

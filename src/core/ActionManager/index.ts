@@ -1,6 +1,7 @@
 import fs from "fs";
 import { join } from "path";
 import { BobActionCollection, BobActionData, CreateBobAction } from "../../types/BobAction";
+import BobTemplate from "../BobTemplate";
 import JsonFS from "../JsonFS";
 
 export default class ActionManager {
@@ -74,7 +75,13 @@ export default class ActionManager {
 
   public async deleteLearntAction(actionName: string): Promise<boolean> {
     const learntActions = await this.getLearntActions();
-    const actionExists = (await learntActions[actionName]) !== undefined;
+    const action = learntActions[actionName];
+    const actionExists = action !== undefined;
+
+    if (actionExists && action.type === "template") {
+      await BobTemplate.remove(action.content);
+    }
+
     delete learntActions[actionName];
     await JsonFS.write(ActionManager.learntActionsFile, learntActions);
     return actionExists;
