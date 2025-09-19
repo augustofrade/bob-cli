@@ -1,8 +1,11 @@
 import { exec, spawn } from "child_process";
 import fs from "fs";
 import { platform } from "os";
+import path from "path";
 import encodeQR from "qr";
+import getAbsolutePath from "../../helpers/get-absolute-path";
 import { BobActionData, BobActionType } from "../../types/BobAction";
+import ActionManager from "../ActionManager";
 import ScriptHandler from "../ScriptHandler";
 
 export default class ActionHandler {
@@ -15,7 +18,7 @@ export default class ActionHandler {
     qr: this.handleQrAtion,
     open: this.handleOpenAction,
     alias: this.handleAliasAction,
-    template: this.handleTextualAction,
+    template: this.handleTemplateAction,
   };
 
   public static handle(action: BobActionData): Promise<string> {
@@ -116,6 +119,25 @@ export default class ActionHandler {
           console.log(`${file.isDirectory() ? "DIR" : "   "}  ${file.name}`);
         });
         resolve(action.content);
+      });
+    });
+  }
+
+  private static handleTemplateAction(action: BobActionData): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const sourceFilename = action.content;
+      const parsedSourceFilename = sourceFilename.slice(4);
+      const sourcePath = path.join(ActionManager.templatesDir, sourceFilename);
+
+      const filename = process.argv[4] ?? parsedSourceFilename;
+      const output = getAbsolutePath(filename);
+
+      fs.copyFile(sourcePath, output, (err) => {
+        if (err === null) {
+          console.log(`Created ${filename} from template ${parsedSourceFilename}`);
+          return resolve("");
+        }
+        reject(err);
       });
     });
   }
