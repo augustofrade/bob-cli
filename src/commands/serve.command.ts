@@ -1,3 +1,4 @@
+import { existsSync } from "fs";
 import { ArgumentsCamelCase } from "yargs";
 import BobLogger from "../core/BobLogger";
 import { BobLogLevel } from "../core/BobLogger/BobLogLevel";
@@ -14,6 +15,9 @@ interface ServeCommandArgs {
 
 export default function serveCommand(args: ArgumentsCamelCase<ServeCommandArgs>) {
   const absolutePath = getAbsolutePath(args.directory ?? "");
+  if (!existsSync(absolutePath))
+    return BobLogger.Instance.logError(`Directory not found: '${absolutePath}'`);
+
   args.logLevel = args.logLevel.toUpperCase();
   const logLevel = BobLogLevel[args.logLevel as any] as unknown as number;
 
