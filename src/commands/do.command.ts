@@ -23,13 +23,14 @@ export default async function doCommand(args: ArgumentsCamelCase<DoCommandArgs>)
     return await listLearntActions();
   }
 
-  ActionHandler.handle(
-    {
-      actionName: args.action_name,
-      ...action,
-    },
-    process.argv.slice(4)
-  ).catch((e) =>
-    console.error(`Something happened while I tried doing the action:\n\n${e.message}.\n`)
-  );
+  runAction({
+    actionName: args.action_name,
+    ...action,
+  });
+}
+
+export function runAction(action: BobActionData) {
+  ActionHandler.handle(action, process.argv.slice(4)).catch((e) => {
+    console.error(`Something happened while I tried doing the action:\n\n${e.message}.\n`);
+  });
 }
