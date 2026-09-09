@@ -7,6 +7,7 @@ import BobTemplate from "../BobTemplate";
 import ScriptHandler from "../ScriptHandler";
 import { PasswordStore } from "../Secrets/PasswordStore";
 import { SecretCrypto } from "../Secrets/SecretsCrypto";
+import { PasswordNotSetError } from "../Secrets/errors";
 
 type BobDoFn = (action: BobActionData, argv: string[]) => Promise<string>;
 
@@ -140,7 +141,7 @@ export default class ActionHandler {
   private static async handleSecretAction(action: BobActionData, argv: string[]): Promise<string> {
     const secretPasswd = await PasswordStore.getMasterPassword();
     if (secretPasswd === null) {
-      throw new Error('Master password not configured for actions of type "secret"');
+      throw new PasswordNotSetError();
     }
 
     const decrypted = SecretCrypto.decryptValue(action.content, secretPasswd);

@@ -7,6 +7,7 @@ import fs from "fs";
 import BobTemplate from "../core/BobTemplate";
 import { PasswordStore } from "../core/Secrets/PasswordStore";
 import { SecretCrypto } from "../core/Secrets/SecretsCrypto";
+import { PasswordNotSetError } from "../core/Secrets/errors";
 
 interface LearnCommandArgs {
   action_name: string;
@@ -41,7 +42,7 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
     if (args.type === "secret") {
       const secretPasswd = await PasswordStore.getMasterPassword();
       if (secretPasswd === null) {
-        throw new Error('Master password not configured for actions of type "secret"');
+        throw new PasswordNotSetError();
       }
       args.content = SecretCrypto.encryptValue(args.content, secretPasswd);
     } else if (args.type === "template") {
