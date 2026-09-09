@@ -9,7 +9,7 @@ import forgetCommand from "./commands/forget.command";
 import helloCommand from "./commands/hello.command";
 import learnCommand from "./commands/learn.command";
 import minifyCommand from "./commands/minify.command";
-import passwdClearCommand from "./commands/passwd-clear.command";
+import passwdForgetCommand from "./commands/passwd-forget.command";
 import passwdSetCommand from "./commands/passwd-set.command";
 import passwdStatusCommand from "./commands/passwd-status.command";
 import qrCommand from "./commands/qr.command";
@@ -64,6 +64,7 @@ function main() {
               "open",
               "alias",
               "template",
+              "secret",
             ],
           })
           .option("force", {
@@ -293,15 +294,15 @@ function main() {
           passwdSetCommand
         )
         .command(
-          "clear",
-          "Clears the master password of the secret manager and invalidates all actions of type 'secret'",
+          "forget",
+          "Forgets the master password of the secret manager, invalidating all actions of type 'secret' until the same password is set again",
           (yargs) => {
             yargs.option("confirm", {
-              type: "string",
-              describe: "Confirm that the password should be cleared.",
+              type: "boolean",
+              describe: "Confirm that the password should be forgotten.",
             });
           },
-          passwdClearCommand
+          passwdForgetCommand
         )
         .command(
           "status",

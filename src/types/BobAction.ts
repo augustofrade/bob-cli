@@ -1,13 +1,5 @@
 export type BobActionType =
-  | "text"
-  | "file"
-  | "dir"
-  | "list-dir"
-  | "script"
-  | "qr"
-  | "open"
-  | "alias"
-  | "template";
+  "text" | "file" | "dir" | "list-dir" | "script" | "qr" | "open" | "alias" | "template" | "secret";
 
 export interface BobActionData {
   actionName: string;

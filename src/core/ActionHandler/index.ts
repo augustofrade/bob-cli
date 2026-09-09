@@ -5,6 +5,8 @@ import encodeQR from "qr";
 import { BobActionData, BobActionType } from "../../types/BobAction";
 import BobTemplate from "../BobTemplate";
 import ScriptHandler from "../ScriptHandler";
+import { PasswordStore } from "../Secrets/PasswordStore";
+import { SecretCrypto } from "../Secrets/SecretsCrypto";
 
 type BobDoFn = (action: BobActionData, argv: string[]) => Promise<string>;
 
@@ -19,6 +21,7 @@ export default class ActionHandler {
     open: this.handleOpenAction,
     alias: this.handleAliasAction,
     template: this.handleTemplateAction,
+    secret: this.handleSecretAction,
   };
 
   public static handle(action: BobActionData, argv: string[]): Promise<string> {
@@ -132,5 +135,16 @@ export default class ActionHandler {
         })
         .catch((err) => reject(err));
     });
+  }
+
+  private static async handleSecretAction(action: BobActionData, argv: string[]): Promise<string> {
+    const secretPasswd = await PasswordStore.getMasterPassword();
+    if (secretPasswd === null) {
+      throw new Error('Master password not configured for actions of type "secret"');
+    }
+
+    const decrypted = SecretCrypto.decryptValue(action.content, secretPasswd);
+    console.log(decrypted);
+    return "";
   }
 }

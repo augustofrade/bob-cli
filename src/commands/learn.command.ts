@@ -5,6 +5,8 @@ import { BobActionType } from "../types/BobAction";
 
 import fs from "fs";
 import BobTemplate from "../core/BobTemplate";
+import { PasswordStore } from "../core/Secrets/PasswordStore";
+import { SecretCrypto } from "../core/Secrets/SecretsCrypto";
 
 interface LearnCommandArgs {
   action_name: string;
@@ -36,7 +38,13 @@ export default async function learnCommand(args: ArgumentsCamelCase<LearnCommand
   }
 
   try {
-    if (args.type === "template") {
+    if (args.type === "secret") {
+      const secretPasswd = await PasswordStore.getMasterPassword();
+      if (secretPasswd === null) {
+        throw new Error('Master password not configured for actions of type "secret"');
+      }
+      args.content = SecretCrypto.encryptValue(args.content, secretPasswd);
+    } else if (args.type === "template") {
       args.content = await BobTemplate.saveFromAction(args.content, learntAction);
     } else if (learntAction?.type === "template") {
       await BobTemplate.remove(learntAction.content);

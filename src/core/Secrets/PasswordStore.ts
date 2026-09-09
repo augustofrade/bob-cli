@@ -13,6 +13,11 @@ export class PasswordStore {
     return pwd !== null;
   }
 
+  public static async getMasterPassword(): Promise<string | null> {
+    const pwd = await keytar.getPassword(this.SERVICE, this.ACCOUNT);
+    return pwd;
+  }
+
   public static clearMasterPassword() {
     return keytar.deletePassword(this.SERVICE, this.ACCOUNT);
   }

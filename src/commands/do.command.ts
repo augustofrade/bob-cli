@@ -29,5 +29,7 @@ export default async function doCommand(args: ArgumentsCamelCase<DoCommandArgs>)
       ...action,
     },
     process.argv.slice(4)
-  ).catch((e) => console.log(e));
+  ).catch((e) =>
+    console.error(`Something happened while I tried doing the action:\n\n${e.message}.\n`)
+  );
 }
