@@ -9,6 +9,9 @@ import forgetCommand from "./commands/forget.command";
 import helloCommand from "./commands/hello.command";
 import learnCommand from "./commands/learn.command";
 import minifyCommand from "./commands/minify.command";
+import passwdClearCommand from "./commands/passwd-clear.command";
+import passwdSetCommand from "./commands/passwd-set.command";
+import passwdStatusCommand from "./commands/passwd-status.command";
 import qrCommand from "./commands/qr.command";
 import regexCommand from "./commands/regex.command";
 import serveCommand from "./commands/serve.command";
@@ -276,6 +279,36 @@ function main() {
       },
       minifyCommand
     )
+    .command("passwd", "Bob Secret manager commands of actions of type 'secret'", (yargs) => {
+      yargs
+        .command(
+          "set [master-password]",
+          "Sets the master password of the secret manager",
+          (yargs) => {
+            yargs.positional("master-password", {
+              describe: "The password",
+              type: "string",
+            });
+          },
+          passwdSetCommand
+        )
+        .command(
+          "clear",
+          "Clears the master password of the secret manager and invalidates all actions of type 'secret'",
+          (yargs) => {
+            yargs.option("confirm", {
+              type: "string",
+              describe: "Confirm that the password should be cleared.",
+            });
+          },
+          passwdClearCommand
+        )
+        .command(
+          "status",
+          "Returns whether the master password of the secret manager has been set",
+          passwdStatusCommand
+        );
+    })
     .command(
       "tellme [action_name]",
       "Asks Bob about a learnt action",
