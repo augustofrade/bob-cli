@@ -20,7 +20,8 @@ Bob was created as a mean to save repetitive stuff that is used in the terminal 
 
 - 🧠 **Learn Actions**: Teach Bob new actions with custom content
 - 🚀 **Execute Actions**: Run previously learnt actions
-- 📝 **Multiple Action Content Types**: Support for plain text, files, directories, scripts, and more
+- 📝 **Multiple Action Content Types**: Support for plain text, files, directories, scripts, secrets and more
+- 🔑 **Store Secrets**: Store, encrypt and decrypt secrets with a secure master password
 - 🌐 **HTTP Server with hot reload**: Serve static content in a local HTTP server with hot reload
 - 💽 **CSS Minification**: Minify and optionally bundle CSS files
 - 📱 **QR Code Generation**: Create QR codes on the fly for content passed as positional argument or through stdin
@@ -66,7 +67,7 @@ In the following example Bob learns and executes an action:
 
 ```bash
 $ bob learn say_hi "Hello, Bob!"
-$ bob do say_hi
+$ bob do say_hi # or just bob say_hi
 
 Hello, Bob!
 ```
@@ -90,7 +91,8 @@ bob learn <action_name> <content> [options]
   - `list-dir`: Directory listing\*
   - `script`: Executable script\*
   - `qr`: content that will be encoded to QR Code
-  - `template`: file that is saved in Bob's data and copied as a template later with `bob do <action>`
+  - `template`: file that is saved in Bob's data and copied as a template later with `bob do <action>`,
+  - `secret`: secret that will be encrypted on save and decrypted later with `bob do <action>`,
 - `--force, -f`: Tells bob to update its knowledge of the provided action
 
 \* Relative paths will be converted to absolute paths.
@@ -117,7 +119,7 @@ bob do css_template ~/portfolio/styles/main.css # another directory with another
 
 ### 🎯 Do Command
 
-Execute a previously learnt action.
+Explicitly execute a previously learnt action.
 
 **Note**: For script actions, Bob will try to call the runtime of the file first by its shebang
 and then by the command/file set in the PATH of the user's system.
@@ -125,6 +127,8 @@ and then by the command/file set in the PATH of the user's system.
 ```bash
 bob do <action_name>
 ```
+
+**Note**: An action named "qr" will work with `bob do qr`, as it explictly executes an action, whilst it won't with `bob qr` as `qr` is a standard command.
 
 **Examples:**
 
@@ -165,6 +169,16 @@ Clear Bob's entire memory, removing all learnt actions.
 ```bash
 bob clear
 ```
+
+### 🔑 Passwd Commands
+
+Commands related to the master password management for actions of type "secret".
+
+- `bob passwd set <password>`: Sets the master password to be used during the encryption and decryption of "secret" actions.
+- `bob passwd forget`: Clears the saved master password. Use `--confirm` to confirm that it should be cleared.
+- `bob passwd status`: Displays whether a master password is set or not.
+
+The master password is saved through the credential manager of the user's OS. Bob has access only to its own credential service scope.
 
 ### 🌐 Serve Command
 
