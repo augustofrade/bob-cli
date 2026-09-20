@@ -1,5 +1,6 @@
 import { exec, spawn } from "child_process";
-import fs from "fs";
+import { existsSync } from "fs";
+import fs from "fs/promises";
 import { platform } from "os";
 import encodeQR from "qr";
 import { BobActionData, BobActionType } from "../../types/BobAction";
@@ -41,8 +42,7 @@ export default class ActionHandler {
   }
 
   private static handleScriptAction(action: BobActionData, argv: string[]): Promise<string> {
-    if (!fs.existsSync(action.content))
-      return Promise.reject(`Script not found: ${action.content}`);
+    if (!existsSync(action.content)) return Promise.reject(`Script not found: ${action.content}`);
 
     const scriptHandler = new ScriptHandler(action.content);
     const runnerFound = scriptHandler.withFileRunner();
@@ -91,51 +91,49 @@ export default class ActionHandler {
     });
   }
 
-  private static handleFileAction(action: BobActionData, argv: string[]): Promise<string> {
-    return new Promise(async (resolve, reject) => {
-      fs.readFile(action.content, "utf-8", (err, data) => {
-        if (err) {
-          console.error(`Something happened while reading the specified file\n`);
-          return reject(err);
-        }
-        console.log(data);
-        resolve(action.content);
-      });
-    });
+  private static async handleFileAction(action: BobActionData, argv: string[]): Promise<string> {
+    try {
+      const data = await fs.readFile(action.content, "utf-8");
+      console.log(data);
+      return action.content;
+    } catch (err) {
+      console.error(`Something happened while reading the specified file\n`);
+      throw err;
+    }
   }
 
   private static handleQrAtion(action: BobActionData, argv: string[]): Promise<string> {
     return new Promise((resolve) => {
       const ascii = encodeQR(action.content, "term");
       console.log(ascii);
-      resolve(ascii);
+      resolve(action.content);
     });
   }
 
-  private static handleListDirAction(action: BobActionData, argv: string[]): Promise<string> {
-    return new Promise((resolve, reject) => {
-      fs.readdir(action.content, { withFileTypes: true }, (err, files) => {
-        if (err) {
-          console.error(`Something happened while reading the specified directory\n`);
-          return reject(err);
-        }
-        files.forEach((file) => {
-          console.log(`${file.isDirectory() ? "DIR" : "   "}  ${file.name}`);
-        });
-        resolve(action.content);
+  private static async handleListDirAction(action: BobActionData, argv: string[]): Promise<string> {
+    try {
+      const files = await fs.readdir(action.content, { withFileTypes: true });
+      files.forEach((file) => {
+        console.log(`${file.isDirectory() ? "DIR" : "   "}  ${file.name}`);
       });
-    });
+      return action.content;
+    } catch (err) {
+      console.error(`Something happened while reading the specified directory\n`);
+      throw err;
+    }
   }
 
-  private static handleTemplateAction(action: BobActionData, argv: string[]): Promise<string> {
-    return new Promise((resolve, reject) => {
-      BobTemplate.copyTemplate(action.content, argv[0])
-        .then(([filename, parsedSourceFilename]) => {
-          console.log(`Created ${filename} from template ${parsedSourceFilename}`);
-          resolve("");
-        })
-        .catch((err) => reject(err));
-    });
+  private static async handleTemplateAction(
+    action: BobActionData,
+    argv: string[]
+  ): Promise<string> {
+    const [filename, parsedSourceFilename] = await BobTemplate.copyTemplate(
+      action.content,
+      argv[0]
+    );
+
+    console.log(`Created ${filename} from template ${parsedSourceFilename}`);
+    return "";
   }
 
   private static async handleSecretAction(action: BobActionData, argv: string[]): Promise<string> {

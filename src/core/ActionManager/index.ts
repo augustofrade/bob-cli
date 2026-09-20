@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs/promises";
 import { BobActionCollection, BobActionData, CreateBobAction } from "../../types/BobAction";
 import BobTemplate from "../BobTemplate";
 import JsonFS from "../JsonFS";
@@ -10,21 +10,12 @@ export default class ActionManager {
 
   private constructor() {}
 
-  public getLearntActions(): Promise<BobActionCollection> {
-    return new Promise((resolve, reject) => {
-      if (this.learntActions) {
-        return resolve(this.learntActions);
-      }
+  public async getLearntActions(): Promise<BobActionCollection> {
+    if (this.learntActions) return this.learntActions;
 
-      JsonFS.read<BobActionCollection>(DataPaths.dataFilePath)
-        .then((data) => {
-          this.learntActions = data || {};
-          resolve(this.learntActions);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+    const data = await JsonFS.read<BobActionCollection>(DataPaths.dataFilePath);
+    this.learntActions = data || {};
+    return data;
   }
 
   public async getLearntActionsArray(): Promise<BobActionData[]> {
@@ -70,13 +61,8 @@ export default class ActionManager {
     return actionExists;
   }
 
-  public async deleteAllLearntActions(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      fs.writeFile(DataPaths.dataFilePath, "{}", (err) => {
-        if (err) return reject(err);
-        resolve(true);
-      });
-    });
+  public async deleteAllLearntActions(): Promise<void> {
+    await fs.writeFile(DataPaths.dataFilePath, "{}", "utf8");
   }
 
   /**
