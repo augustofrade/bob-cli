@@ -4,7 +4,7 @@ import path from "path";
 import getAbsolutePath from "../helpers/get-absolute-path";
 import shortId from "../helpers/short-id";
 import { BobActionSpecification } from "../types/BobAction";
-import ActionManager from "./ActionManager";
+import { DataPaths } from "./paths";
 
 /**
  * Bob Template (action type) related operations
@@ -61,7 +61,7 @@ export default class BobTemplate {
    */
   public static async copyTemplate(source: string, dest?: string): Promise<[string, string]> {
     const parsedSourceFilename = source.slice(4);
-    const sourcePath = path.join(ActionManager.templatesDir, source);
+    const sourcePath = path.join(DataPaths.templatesDir, source);
 
     let filename = parsedSourceFilename;
     if (dest) {
@@ -99,6 +99,6 @@ export default class BobTemplate {
   }
 
   static templatePath(filename: string) {
-    return path.join(ActionManager.templatesDir, filename);
+    return path.join(DataPaths.templatesDir, filename);
   }
 }

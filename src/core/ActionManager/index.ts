@@ -1,31 +1,14 @@
 import fs from "fs";
-import { join } from "path";
 import { BobActionCollection, BobActionData, CreateBobAction } from "../../types/BobAction";
 import BobTemplate from "../BobTemplate";
 import JsonFS from "../JsonFS";
+import { DataPaths } from "../paths";
 
 export default class ActionManager {
   private static instance: ActionManager;
-  private static readonly learntActionsDir: string = join(__dirname, "../../../data/");
-  public static readonly templatesDir: string = join(__dirname, "../../../data/templates");
-  private static readonly learntActionsFile = join(this.learntActionsDir, "learntActions.json");
   private learntActions: null | BobActionCollection = null;
 
   private constructor() {}
-
-  /**
-   * Verifies if the data file exists.
-   * If the file does not exist, it creates a new one with an empty JSON object.
-   * @return Whether a learnt actions file should be created or not.
-   */
-  public init(): boolean {
-    fs.mkdirSync(ActionManager.templatesDir, { recursive: true });
-
-    if (fs.existsSync(ActionManager.learntActionsFile)) return false;
-
-    fs.writeFileSync(ActionManager.learntActionsFile, "{}", "utf-8");
-    return true;
-  }
 
   public getLearntActions(): Promise<BobActionCollection> {
     return new Promise((resolve, reject) => {
@@ -33,7 +16,7 @@ export default class ActionManager {
         return resolve(this.learntActions);
       }
 
-      JsonFS.read<BobActionCollection>(ActionManager.learntActionsFile)
+      JsonFS.read<BobActionCollection>(DataPaths.dataFilePath)
         .then((data) => {
           this.learntActions = data || {};
           resolve(this.learntActions);
@@ -70,7 +53,7 @@ export default class ActionManager {
       learntAt: new Date(),
     };
 
-    JsonFS.write(ActionManager.learntActionsFile, learntActions);
+    JsonFS.write(DataPaths.dataFilePath, learntActions);
   }
 
   public async deleteLearntAction(actionName: string): Promise<boolean> {
@@ -83,13 +66,13 @@ export default class ActionManager {
     }
 
     delete learntActions[actionName];
-    await JsonFS.write(ActionManager.learntActionsFile, learntActions);
+    await JsonFS.write(DataPaths.dataFilePath, learntActions);
     return actionExists;
   }
 
   public async deleteAllLearntActions(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      fs.writeFile(ActionManager.learntActionsFile, "{}", (err) => {
+      fs.writeFile(DataPaths.dataFilePath, "{}", (err) => {
         if (err) return reject(err);
         resolve(true);
       });

@@ -18,10 +18,10 @@ import serveCommand from "./commands/serve.command";
 import tellmeCommand from "./commands/tellme.command";
 import treeCommand from "./commands/tree.command";
 import uuidCommand from "./commands/uuid.command";
-import ActionManager from "./core/ActionManager";
+import { DataDirectory } from "./core/paths";
 
 try {
-  const knowledgeNotFound = ActionManager.Instance.init();
+  const knowledgeNotFound = DataDirectory.createAllIfNotExists();
   if (knowledgeNotFound) {
     console.log("Couldn't find my knowledge base. Setting everything up...\n");
   }
