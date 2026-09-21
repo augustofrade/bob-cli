@@ -1,5 +1,5 @@
 import { ArgumentsCamelCase } from "yargs";
-import ActionManager from "../core/ActionManager";
+import ActionManager from "../core/actions/ActionManager";
 import { runAction } from "./do.command";
 
 export default async function defaultCommand(args: ArgumentsCamelCase<{ command?: string }>) {

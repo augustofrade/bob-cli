@@ -1,5 +1,5 @@
 import { ArgumentsCamelCase } from "yargs";
-import ActionManager from "../core/ActionManager";
+import ActionManager from "../core/actions/ActionManager";
 
 interface ForgetCommandArgs {
   action_name: string;

@@ -4,6 +4,9 @@ import BobTemplate from "../BobTemplate";
 import JsonFS from "../JsonFS";
 import { DataPaths } from "../paths";
 
+/**
+ * Encapsulates action management methods, such as listing, creation, removal
+ */
 export default class ActionManager {
   private static instance: ActionManager;
   private learntActions: null | BobActionCollection = null;
@@ -29,10 +32,9 @@ export default class ActionManager {
     }));
   }
 
-  public hasLearntAction(actionName: string): Promise<boolean> {
-    return this.getLearntActions().then((learntActions) => {
-      return learntActions[actionName] !== undefined;
-    });
+  public async hasLearntAction(actionName: string): Promise<boolean> {
+    const learntActions = await this.getLearntActions();
+    return learntActions[actionName] !== undefined;
   }
 
   public async saveLearntAction(action: CreateBobAction): Promise<void> {

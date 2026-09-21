@@ -1,5 +1,5 @@
 import { ArgumentsCamelCase } from "yargs";
-import ActionManager from "../core/ActionManager";
+import ActionManager from "../core/actions/ActionManager";
 import BobTemplate from "../core/BobTemplate";
 import listLearntActions from "../helpers/listLearntActions";
 

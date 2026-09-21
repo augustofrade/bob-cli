@@ -12,6 +12,9 @@ import { PasswordNotSetError } from "../Secrets/errors";
 
 type BobDoFn = (action: BobActionData, argv: string[]) => Promise<string>;
 
+/**
+ * Handles Bob actions execution
+ */
 export default class ActionHandler {
   private static handlers: Record<BobActionType, BobDoFn> = {
     file: this.handleFileAction,

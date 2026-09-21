@@ -1,4 +1,4 @@
-import ActionManager from "../core/ActionManager";
+import ActionManager from "../core/actions/ActionManager";
 
 export default async function listLearntActions() {
   const actions = await ActionManager.Instance.getLearntActionsArray();

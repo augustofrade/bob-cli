@@ -1,4 +1,4 @@
-import ActionManager from "../core/ActionManager";
+import ActionManager from "../core/actions/ActionManager";
 
 export default async function clearCommand() {
   console.log("Wash day. Memory's clear, right?");
